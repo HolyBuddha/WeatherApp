@@ -147,17 +147,25 @@ class ViewController: UIViewController {
         }
     }
     private func updateBackgroundImage(id: Int) -> UIImage {
-        var backgroundImage = UIImage(#imageLiteral(resourceName: "back_weather"))
-        if id >= 800 {
-            backgroundImage = UIImage(#imageLiteral(resourceName: "darkCloudy"))
-        } else if id < 300 {
-            backgroundImage = UIImage(#imageLiteral(resourceName: "storm"))
-        } else if id > 300 && id <= 531 {
-            backgroundImage = UIImage(#imageLiteral(resourceName: "rainy"))
+        switch id {
+        case 800 : return UIImage(#imageLiteral(resourceName: "back_weather"))
+        case 801... : return UIImage(#imageLiteral(resourceName: "darkCloudy"))
+        case ...300 : return UIImage(#imageLiteral(resourceName: "storm"))
+//        var backgroundImage = UIImage(#imageLiteral(resourceName: "back_weather"))
+//        if id >= 800 {
+//            backgroundImage = UIImage(#imageLiteral(resourceName: "darkCloudy"))
+//        } else if id < 300 {
+//            backgroundImage = UIImage(#imageLiteral(resourceName: "storm"))
+//        } else if id > 300 && id <= 531 {
+//            backgroundImage = UIImage(#imageLiteral(resourceName: "rainy"))
+//        }
+//        return backgroundImage
+        default:
+            return UIImage(#imageLiteral(resourceName: "rainy"))
         }
-        return backgroundImage
-    }
 }
+}
+    
 
 
 extension ViewController: CLLocationManagerDelegate {
