@@ -10,7 +10,7 @@ import Foundation
 class NetworkManager {
     
     static let shared = NetworkManager()
-    
+
     private init() {}
     
     func fetchData(from url: String?, with completion: @escaping(WeatherData) -> Void) {

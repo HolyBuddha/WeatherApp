@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     private var locationManager = CLLocationManager()
     private var weatherData: WeatherData?
     
+    
     private lazy var locationLabel: UILabel = {
         let locationLabel = UILabel()
         locationLabel.drawLabel(fontSize: 40)
@@ -59,7 +60,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         startLocationManager()
-        //assignbackground()
         setupSubviews(stackView)
         setConstraits()
     }
@@ -72,30 +72,10 @@ class ViewController: UIViewController {
     
     private func setConstraits() {
             stackView.translatesAutoresizingMaskIntoConstraints = false
-//        locationLabel.translatesAutoresizingMaskIntoConstraints = false
-//        tempLabel.translatesAutoresizingMaskIntoConstraints = false
-//        weatherDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-//        weatherIcon.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //stackView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3)
-//            locationLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            locationLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-//            locationLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/10),
-//
-//            tempLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            tempLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 5),
-//            //tempLabel.heightAnchor.constraint(equalTo: locationLabel.heightAnchor),
-//
-//            weatherDescriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            weatherDescriptionLabel.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 5),
-//            //weatherDescriptionLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/10),
-//
-//            weatherIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            weatherIcon.topAnchor.constraint(equalTo: weatherDescriptionLabel.bottomAnchor, constant: 5),
-//            //weatherIcon.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/10)
         ])
     }
     
@@ -127,7 +107,7 @@ class ViewController: UIViewController {
     
     
     private func startLocationManager() {
-        locationManager.requestWhenInUseAuthorization()
+            locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -138,7 +118,7 @@ class ViewController: UIViewController {
     }
     
     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        let urlWithCoordinates = "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude.description)&lon=\(longitude.description)&units=metric&lang=ru&appid=edfe94b1ee9b1f9ceecd7596d2f66b06"
+        let urlWithCoordinates = "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&units=metric&lang=ru&appid=edfe94b1ee9b1f9ceecd7596d2f66b06"
         
         NetworkManager.shared.fetchData(from: urlWithCoordinates) { weatherData in
             self.weatherData = weatherData
@@ -151,27 +131,22 @@ class ViewController: UIViewController {
         case 800 : return UIImage(#imageLiteral(resourceName: "back_weather"))
         case 801... : return UIImage(#imageLiteral(resourceName: "darkCloudy"))
         case ...300 : return UIImage(#imageLiteral(resourceName: "storm"))
-//        var backgroundImage = UIImage(#imageLiteral(resourceName: "back_weather"))
-//        if id >= 800 {
-//            backgroundImage = UIImage(#imageLiteral(resourceName: "darkCloudy"))
-//        } else if id < 300 {
-//            backgroundImage = UIImage(#imageLiteral(resourceName: "storm"))
-//        } else if id > 300 && id <= 531 {
-//            backgroundImage = UIImage(#imageLiteral(resourceName: "rainy"))
-//        }
-//        return backgroundImage
         default:
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
 }
-}
-    
 
+
+
+}
 
 extension ViewController: CLLocationManagerDelegate {
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
+            locationManager.stopUpdatingLocation()
             updateWeatherInfo(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
+           
         }
     }
 }
@@ -184,6 +159,7 @@ extension UIView {
         layer.shadowRadius = radius
     }
 }
+
 extension UILabel {
     func drawLabel(textColor: UIColor = .white, fontSize: CGFloat, adjustsFontSizeToFitWidth: Bool = true, numberOfLines: Int = 0, minimumScaleFactor: CGFloat = 0.5, baselineAdjustment: UIBaselineAdjustment = .alignCenters, textAlignment: NSTextAlignment = .center) {
         self.textColor = textColor
