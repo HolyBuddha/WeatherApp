@@ -30,8 +30,8 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation], completion: (_ lat: String, _ lng: String) -> Void) {
         if let lastLocation = locations.last {
-            let latitude = String(lastLocation.coordinate.latitude )
-            let longitude = String(lastLocation.coordinate.longitude )
+            let latitude = String(lastLocation.coordinate.latitude)
+            let longitude = String(lastLocation.coordinate.longitude)
             completion(latitude, longitude)
         }
     }

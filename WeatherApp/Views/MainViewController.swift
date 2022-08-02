@@ -8,10 +8,12 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     
     private var locationManager = CLLocationManager()
-    private var weatherData: WeatherData?
+    private var weatherData: WeatherDataList?
+    private var url = WeatherApi()
+    private let tableView = UITableView()
     
     
     private lazy var locationLabel: UILabel = {
@@ -58,11 +60,16 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.dataSource = self
         startLocationManager()
-        setupSubviews(stackView)
+        setupSubviews(stackView,tableView)
         setConstraits()
     }
+    
+//    override func viewDidLayoutSubviews() {
+//        ta
+//    }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -71,11 +78,17 @@ class ViewController: UIViewController {
     }
     
     private func setConstraits() {
-            stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
+            tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2),
+            tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            //tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20),
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2)
         ])
     }
     
@@ -107,7 +120,7 @@ class ViewController: UIViewController {
     
     
     private func startLocationManager() {
-            locationManager.requestWhenInUseAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
@@ -118,7 +131,7 @@ class ViewController: UIViewController {
     }
     
     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        let urlWithCoordinates = "http://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&units=metric&lang=ru&appid=edfe94b1ee9b1f9ceecd7596d2f66b06"
+        let urlWithCoordinates = url.apiForCurrentWeather(latitude: latitude, longitude: longitude, units: Units.metric)
         
         NetworkManager.shared.fetchData(from: urlWithCoordinates) { weatherData in
             self.weatherData = weatherData
@@ -134,19 +147,16 @@ class ViewController: UIViewController {
         default:
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
+    }
 }
 
-
-
-}
-
-extension ViewController: CLLocationManagerDelegate {
+extension MainViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
             locationManager.stopUpdatingLocation()
             updateWeatherInfo(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
-           
+            
         }
     }
 }
@@ -169,4 +179,21 @@ extension UILabel {
         self.minimumScaleFactor = minimumScaleFactor
         self.baselineAdjustment = baselineAdjustment
         self.textAlignment = textAlignment}
+}
+
+
+extension MainViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        var content = cell.defaultContentConfiguration()
+        content.text = "hello \(indexPath.row + 1)"
+        cell.contentConfiguration = content
+        return cell
+    }
+
 }

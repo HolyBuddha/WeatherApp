@@ -13,7 +13,7 @@ class NetworkManager {
 
     private init() {}
     
-    func fetchData(from url: String?, with completion: @escaping(WeatherData) -> Void) {
+    func fetchData(from url: String?, with completion: @escaping(WeatherDataList) -> Void) {
         guard let url = URL(string: url ?? "") else { return }
         
         URLSession.shared.dataTask(with: url) { data, _, error in
@@ -23,7 +23,7 @@ class NetworkManager {
             }
             
             do {
-                let weatherData = try JSONDecoder().decode(WeatherData.self, from: data)
+                let weatherData = try JSONDecoder().decode(WeatherDataList.self, from: data)
                 DispatchQueue.main.async {
                     completion(weatherData)
                 }
