@@ -11,9 +11,10 @@ import CoreLocation
 class MainViewController: UIViewController {
     
     private var locationManager = CLLocationManager()
-    private var weatherData: WeatherDataList?
+    private var weatherData: WeatherForecastData?
     private var url = WeatherApi()
-    private let tableView = UITableView()
+    private var tableView = UITableView()
+    private var coordinates = CLLocation()
     
     
     private lazy var locationLabel: UILabel = {
@@ -60,16 +61,16 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        //tableView.setTableView()
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
+        //tableView.rowHeight = 45
+        tableView.tableFooterView = UIView()
         startLocationManager()
         setupSubviews(stackView,tableView)
         setConstraits()
     }
     
-//    override func viewDidLayoutSubviews() {
-//        ta
-//    }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -85,18 +86,18 @@ class MainViewController: UIViewController {
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
-            tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1/2),
+            tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             //tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20),
-            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/2)
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/4)
         ])
     }
     
     private func updateLabels() {
-        locationLabel.text = weatherData?.name ?? "ERROR"
-        tempLabel.text = checkTemp(weatherData?.main.temp ?? 0)
-        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherData?.weather[0].id ?? 200]
-        weatherIcon.image = UIImage(named: weatherData?.weather[0].icon ?? "ERROR")
+        locationLabel.text = weatherData?.city.name ?? "ERROR"
+        tempLabel.text = checkTemp(weatherData?.list.first?.main.temp ?? 0)
+        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherData?.list.first?.weather[0].id ?? 200]
+        weatherIcon.image = UIImage(named: weatherData?.list.first?.weather[0].icon ?? "ERROR")
         assignbackground()
     }
     
@@ -112,7 +113,7 @@ class MainViewController: UIViewController {
     
     private func assignbackground() {
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = updateBackgroundImage(id: weatherData?.weather[0].id ?? 200)
+        backgroundImage.image = updateBackgroundImage(id: weatherData?.list.first?.weather[0].id ?? 200)
         //#imageLiteral(resourceName: "darkCloudy")
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
@@ -131,12 +132,15 @@ class MainViewController: UIViewController {
     }
     
     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        let urlWithCoordinates = url.apiForCurrentWeather(latitude: latitude, longitude: longitude, units: Units.metric)
-        
+        //let urlWithCoordinates = url.apiForCurrentWeather(latitude: latitude, longitude: longitude, units: Units.metric)
+        let urlWithCoordinates = url.apiForecastFor5Days(latitude: latitude, longitude: longitude, units: Units.metric)
         NetworkManager.shared.fetchData(from: urlWithCoordinates) { weatherData in
+            print(latitude)
+            print(longitude)
             self.weatherData = weatherData
             self.updateLabels()
-            print(self.weatherData ?? "ERROR")
+            self.tableView.reloadData()
+            print(self.weatherData?.list ?? "ERROR")
         }
     }
     private func updateBackgroundImage(id: Int) -> UIImage {
@@ -181,19 +185,31 @@ extension UILabel {
         self.textAlignment = textAlignment}
 }
 
-
 extension MainViewController: UITableViewDataSource {
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        weatherData?.list.count ?? 3
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        content.text = "hello \(indexPath.row + 1)"
-        cell.contentConfiguration = content
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
+        tableView.backgroundColor = UIColor.clear
+        tableView.layer.cornerRadius = 20
+        //tableView.clipsToBounds = true
+        tableView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
+        tableView.layer.borderWidth = 1
+        cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor(white: 0.7, alpha: 0.5)
+        cell.weatherTemp.text = String(round((weatherData?.list[indexPath.row].main.temp ?? 0) * 10) / 10)
+//        var content = cell.defaultContentConfiguration()
+//        content.textProperties.color = .white
+//        content.text = weatherData?.list[indexPath.row].main.temp.description
+//        content.secondaryText = weatherData?.list[indexPath.row].main.humidity.description
+//        content.image = UIImage(systemName: "sun.min")
+//        content.imageProperties.tintColor = .white
+//        cell.contentConfiguration = content
         return cell
     }
-
 }
+
+
