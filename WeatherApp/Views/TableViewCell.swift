@@ -23,6 +23,7 @@ class TableViewCell: UITableViewCell {
         stackViewCell.distribution  = UIStackView.Distribution.equalCentering
         stackViewCell.spacing = 5
         stackViewCell.translatesAutoresizingMaskIntoConstraints = false
+        stackViewCell.sizeToFit()
         
         // weatherLabels Properties
         weatherDay.textColor = .white

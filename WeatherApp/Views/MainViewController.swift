@@ -48,22 +48,26 @@ class MainViewController: UIViewController {
     
     private lazy var stackView: UIStackView = {
         var stackView = UIStackView()
-        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel, weatherIcon, tableView])
+        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel, tableView])
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
-        stackView.setCustomSpacing(20, after: weatherIcon)
+        stackView.setCustomSpacing(50, after: weatherDescriptionLabel)
         return stackView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //tableView.setTableView()
+        
+        //Configure TableView
         tableView.register(TableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(TableViewHeader.self, forHeaderFooterViewReuseIdentifier: "header")
         tableView.dataSource = self
-        //tableView.rowHeight = 45
-        tableView.tableFooterView = UIView()
+        tableView.delegate = self
+        //tableView.isScrollEnabled = false
+        tableView.drawShadow()
+
         startLocationManager()
         setupSubviews(stackView)
         setConstraits()
@@ -78,7 +82,6 @@ class MainViewController: UIViewController {
     
     private func setConstraits() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        //tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
@@ -123,11 +126,11 @@ class MainViewController: UIViewController {
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             locationManager.pausesLocationUpdatesAutomatically = true
             locationManager.startUpdatingLocation()
+           
         }
     }
     
     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        //let urlWithCoordinates = url.apiForCurrentWeather(latitude: latitude, longitude: longitude, units: Units.metric)
         let urlWithCoordinates = url.apiForecastFor5Days(latitude: latitude, longitude: longitude, units: Units.metric)
         NetworkManager.shared.fetchData(from: urlWithCoordinates) { weatherData in
             print(latitude)
@@ -135,6 +138,7 @@ class MainViewController: UIViewController {
             self.weatherData = weatherData
             self.updateLabels()
             self.tableView.reloadData()
+            //self.tableView.tableHeaderView = self.headerForTableView
             print(self.weatherData?.list ?? "ERROR")
         }
     }
@@ -160,38 +164,11 @@ extension MainViewController: CLLocationManagerDelegate {
     }
 }
 
-extension MainViewController {
+extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func dateFromUnix(date: Double, dateFormat: String) -> String {
-        let date = NSDate(timeIntervalSince1970: date)
-        let dayTimePeriodFormatter = DateFormatter()
-        dayTimePeriodFormatter.dateFormat = dateFormat
-        let result = dayTimePeriodFormatter.string(from: date as Date)
-        return result
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
     }
-}
-
-extension UIView {
-    func drawShadow(offset: CGSize = CGSize(width: 5, height: 5), opacity: Float = 0.1, color: UIColor = .black, radius: CGFloat = 1) {
-        layer.shadowColor = color.cgColor
-        layer.shadowOffset = offset
-        layer.shadowOpacity = opacity
-        layer.shadowRadius = radius
-    }
-}
-
-extension UILabel {
-    func drawLabel(textColor: UIColor = .white, fontSize: CGFloat, adjustsFontSizeToFitWidth: Bool = true, numberOfLines: Int = 0, minimumScaleFactor: CGFloat = 0.5, baselineAdjustment: UIBaselineAdjustment = .alignCenters, textAlignment: NSTextAlignment = .center) {
-        self.textColor = textColor
-        self.font = self.font.withSize(fontSize)
-        self.adjustsFontSizeToFitWidth = adjustsFontSizeToFitWidth
-        self.numberOfLines = numberOfLines
-        self.minimumScaleFactor = minimumScaleFactor
-        self.baselineAdjustment = baselineAdjustment
-        self.textAlignment = textAlignment}
-}
-
-extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         weatherData?.list.count ?? 3
@@ -199,13 +176,13 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
-        tableView.backgroundColor = UIColor.clear
+        tableView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         tableView.layer.cornerRadius = 20
         //tableView.clipsToBounds = true
         tableView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
         tableView.layer.borderWidth = 1
-        cell.contentView.backgroundColor = UIColor.clear
-        cell.backgroundColor = UIColor(white: 0.7, alpha: 0.5)
+        //cell.contentView.backgroundColor = UIColor.clear
+        cell.backgroundColor = UIColor.clear
         //cell.weatherTemp.text = weatherData?.list[indexPath.row].dt.description
         cell.weatherDay.text = dateFromUnix(date: weatherData?.list[indexPath.row].dt ?? 0, dateFormat: "E d MM")
         cell.weatherTempMinMax.text = checkTemp(weatherData?.list[indexPath.row].main.tempMin ?? 0) +
@@ -220,6 +197,33 @@ extension MainViewController: UITableViewDataSource {
 //        cell.contentConfiguration = content
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
+        return header
+    }
+   
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        "Прогноз на 5 дней"
+//    }
+//    }
+////
+     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            return 20
+        }
+////
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//         let headerView = UIView.init(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
+//         let headerCell = tableView.dequeueReusableCell(withIdentifier: "cell")
+//                    let label = UILabel()
+//                    label.frame = CGRect.init(x: 5, y: 5, width: 50, height: 50)
+//                    label.text = "Notification Times"
+//                    label.font = .systemFont(ofSize: 16)
+//                    label.textColor = .yellow
+//         headerCell?.frame = headerView.bounds
+//         headerView.addSubview(label)
+//         return headerView
+//}
+
+
 }
-
-
