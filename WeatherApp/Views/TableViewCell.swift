@@ -8,24 +8,44 @@
 import UIKit
 
 class TableViewCell: UITableViewCell {
-
-    let weatherTemp = UILabel()
+    
+    lazy var stackViewCell = UIStackView()
+    lazy var weatherDay = UILabel()
+    lazy var weatherImage = UIImageView()
+    lazy var weatherTempMinMax = UILabel()
+  
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        // Set any attributes of your UI components here.
-        weatherTemp.translatesAutoresizingMaskIntoConstraints = false
-        weatherTemp.textColor = .white
+        // StackView Properties
+        stackViewCell.axis  = NSLayoutConstraint.Axis.horizontal
+        stackViewCell.distribution  = UIStackView.Distribution.equalCentering
+        stackViewCell.spacing = 5
+        stackViewCell.translatesAutoresizingMaskIntoConstraints = false
         
-        // Add the UI components
-        contentView.addSubview(weatherTemp)
+        // weatherLabels Properties
+        weatherDay.textColor = .white
+        weatherDay.adjustsFontSizeToFitWidth = true
+        weatherTempMinMax.textColor = .white
+        weatherTempMinMax.adjustsFontSizeToFitWidth = true
         
+        // weatherImage Properties
+       
+        weatherImage.tintColor = .white
+        
+        // Added the UI components
+        stackViewCell.addArrangedSubview(weatherDay)
+        stackViewCell.addArrangedSubview(weatherImage)
+        stackViewCell.addArrangedSubview(weatherTempMinMax)
+        contentView.addSubview(stackViewCell)
+        
+        // StackView Constraits
         NSLayoutConstraint.activate([
-            weatherTemp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            weatherTemp.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            weatherTemp.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            //weatherTemp.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5)
+            stackViewCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            stackViewCell.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            stackViewCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            stackViewCell.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.85),
         ])
     }
     

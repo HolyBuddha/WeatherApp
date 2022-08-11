@@ -41,21 +41,19 @@ class MainViewController: UIViewController {
     private lazy var weatherIcon: UIImageView = {
         let weatherIcon = UIImageView()
         weatherIcon.drawShadow()
+        //weatherIcon.contentMode = .scaleAspectFill
         return weatherIcon
+        
     }()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
+        var stackView = UIStackView()
+        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel, weatherIcon, tableView])
         stackView.axis  = NSLayoutConstraint.Axis.vertical
-        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
-        
-        stackView.addArrangedSubview(locationLabel)
-        stackView.addArrangedSubview(tempLabel)
-        stackView.addArrangedSubview(weatherDescriptionLabel)
-        stackView.addArrangedSubview(weatherIcon)
-        
+        stackView.setCustomSpacing(20, after: weatherIcon)
         return stackView
     }()
     
@@ -67,7 +65,7 @@ class MainViewController: UIViewController {
         //tableView.rowHeight = 45
         tableView.tableFooterView = UIView()
         startLocationManager()
-        setupSubviews(stackView,tableView)
+        setupSubviews(stackView)
         setConstraits()
     }
     
@@ -80,16 +78,13 @@ class MainViewController: UIViewController {
     
     private func setConstraits() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        //tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            //tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20),
-            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/4)
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3)
         ])
     }
     
@@ -165,6 +160,17 @@ extension MainViewController: CLLocationManagerDelegate {
     }
 }
 
+extension MainViewController {
+    
+    func dateFromUnix(date: Double, dateFormat: String) -> String {
+        let date = NSDate(timeIntervalSince1970: date)
+        let dayTimePeriodFormatter = DateFormatter()
+        dayTimePeriodFormatter.dateFormat = dateFormat
+        let result = dayTimePeriodFormatter.string(from: date as Date)
+        return result
+    }
+}
+
 extension UIView {
     func drawShadow(offset: CGSize = CGSize(width: 5, height: 5), opacity: Float = 0.1, color: UIColor = .black, radius: CGFloat = 1) {
         layer.shadowColor = color.cgColor
@@ -200,7 +206,11 @@ extension MainViewController: UITableViewDataSource {
         tableView.layer.borderWidth = 1
         cell.contentView.backgroundColor = UIColor.clear
         cell.backgroundColor = UIColor(white: 0.7, alpha: 0.5)
-        cell.weatherTemp.text = String(round((weatherData?.list[indexPath.row].main.temp ?? 0) * 10) / 10)
+        //cell.weatherTemp.text = weatherData?.list[indexPath.row].dt.description
+        cell.weatherDay.text = dateFromUnix(date: weatherData?.list[indexPath.row].dt ?? 0, dateFormat: "E d MM")
+        cell.weatherTempMinMax.text = checkTemp(weatherData?.list[indexPath.row].main.tempMin ?? 0) +
+        " ... " + checkTemp(weatherData?.list[indexPath.row].main.tempMax ?? 0)
+        cell.weatherImage.image = UIImage(named: weatherData?.list[indexPath.row].weather[0].icon ?? "ERROR")
 //        var content = cell.defaultContentConfiguration()
 //        content.textProperties.color = .white
 //        content.text = weatherData?.list[indexPath.row].main.temp.description
