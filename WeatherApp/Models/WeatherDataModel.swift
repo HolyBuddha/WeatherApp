@@ -7,11 +7,21 @@
 
 import Foundation
 
-struct WeatherData: Decodable {
-    var weather: [Weather] = []
-    let main: Main
-    let wind: Wind
+struct WeatherForecastData: Decodable {
+    var list: [WeatherDataList] = []
+    let city: City
+}
+
+
+struct City: Decodable {
     let name: String
+    
+}
+struct WeatherDataList: Decodable {
+    let dt: Double
+    let main: Main
+    var weather: [Weather] = []
+    let wind: Wind
 }
 
 struct Weather: Decodable {
@@ -45,61 +55,28 @@ struct Wind: Decodable {
     let gust: Double
 }
 
-struct weatherConditions {
-    static let weatherIDs: [Int: String] = [
-        200: "Гроза с небольшим дождем",
-        201: "Гроза с дождем",
-        202: "Гроза с сильным дождем",
-        210: "Небольшая гроза",
-        211: "Гроза",
-        212: "Сильная гроза",
-        221: "Сильнейшая гроза",
-        230: "Гроза с небольшим дождем",
-        231: "Гроза с дождем",
-        232: "Гроза с сильным дождем",
-        300: "Легкий моросящий дождь",
-        301: "Мелкий дождь",
-        302: "Сильный моросящий дождь",
-        310: "Интенсивный моросящий дождь",
-        311: "Моросящий дождь",
-        312: "Сильный моросящий дождь",
-        313: "Ливень и изморось",
-        314: "Сильный ливень и изморось",
-        321: "Ливневый дождь",
-        500: "Небольшой дождь",
-        501: "Умеренный дождь",
-        502: "Сильный интенсивный дождь",
-        503: "Очень сильный дождь",
-        504: "Экстремальный дождь",
-        511: "Ледянной дождь",
-        520: "Непродолжительный ливень",
-        521: "Проливной дождь",
-        522: "Продолжительный ливень",
-        531: "Сильнейший ливень",
-        600: "Небольшой снег",
-        601: "Снег",
-        602: "Сильный снег",
-        611: "Мокрый снег",
-        612: "Дождь со снегом",
-        615: "Небольшой дождь и снег",
-        616: "Дождь и снег",
-        620: "Небольшой снегопад",
-        621: "Снегопад",
-        622: "Сильный снегопад",
-        701: "Пасмурность",
-        711: "Дым",
-        721: "Дымка",
-        731: "Песок, пылевые вихри",
-        741: "Туман",
-        751: "Песок",
-        761: "Пыль",
-        762: "Вулканический пепел",
-        771: "Шквал",
-        781: "Торнадо",
-        800: "Чистое небо",
-        801: "Немного облаков",
-        802: "Рассеянные облака",
-        803: "Рванные облака",
-        804: "Пасмурные облака"
-    ]
+
+extension WeatherForecastData {
+    
+    func takeDataFromArray() -> [String] {
+        
+        var filteredArray: [String] = []
+        
+        
+        for date in list {
+            let dateFromDT = NSDate(timeIntervalSince1970: date.dt)
+            let dayTimePeriodFormatter = DateFormatter()
+            dayTimePeriodFormatter.dateFormat = "HH:mm"
+            let result = dayTimePeriodFormatter.string(from: dateFromDT as Date)
+            //if result == "15:00" { filteredArray.append(date.dt) }
+            if result == "15:00" {
+                let filteredDate = NSDate(timeIntervalSince1970: date.dt)
+                dayTimePeriodFormatter.dateFormat = "E, d.MM"
+                let answer = dayTimePeriodFormatter.string(from: filteredDate as Date)
+                filteredArray.append(answer)
+            }
+        }
+        return filteredArray
+    }
 }
+
