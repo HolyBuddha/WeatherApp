@@ -9,6 +9,9 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
+    static let reuseID = "TableViewCell"
+    
+    // Create UIViews
     lazy var stackViewCell = UIStackView()
     lazy var weatherDay = UILabel()
     lazy var weatherImage = UIImageView()
@@ -32,7 +35,6 @@ class TableViewCell: UITableViewCell {
         weatherTempMinMax.adjustsFontSizeToFitWidth = true
         
         // weatherImage Properties
-       
         weatherImage.tintColor = .white
         
         // Added the UI components
@@ -46,7 +48,7 @@ class TableViewCell: UITableViewCell {
             stackViewCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             stackViewCell.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             stackViewCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            stackViewCell.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.85),
+            stackViewCell.heightAnchor.constraint(equalTo: contentView.heightAnchor),
         ])
     }
     

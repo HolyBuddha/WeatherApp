@@ -9,14 +9,31 @@ import UIKit
 import CoreLocation
 
 
-extension MainViewController {
+extension TableView {
     
-    func dateFromUnix(date: Double, dateFormat: String) -> String {
-        let date = NSDate(timeIntervalSince1970: date)
-        let dayTimePeriodFormatter = DateFormatter()
-        dayTimePeriodFormatter.dateFormat = dateFormat
-        let result = dayTimePeriodFormatter.string(from: date as Date)
-        return result
+//    func dateFromUnix(date: Double, dateFormat: String) -> String {
+//        let date = NSDate(timeIntervalSince1970: date)
+//        let dayTimePeriodFormatter = DateFormatter()
+////        let dayTimeNeeded = DateFormatter()
+////        dayTimeNeeded.dateFormat = "HH:mm"
+////        if dayTimeNeeded.string(from: date as Date) == "06:00" {
+//        dayTimePeriodFormatter.dateFormat = dateFormat
+//        let result = dayTimePeriodFormatter.string(from: date as Date)
+//        return result
+////        } else {
+////            return "No data"
+////        }
+//        // доделай функцию чтобы возвращала массив
+//    }
+    
+    func checkTemp(_ temp: Double) -> String {
+        if temp > 0 {
+            return "+" + "\(Int(temp))" + "\u{00B0}"
+        } else if temp == 0 {
+            return "0" + "\u{00B0}"
+        } else {
+            return "\(Int(temp))" + "\u{00B0}"
+        }
     }
 }
 

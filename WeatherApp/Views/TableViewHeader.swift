@@ -9,30 +9,34 @@ import UIKit
 
 class TableViewHeader: UITableViewHeaderFooterView {
 
-    static let identifier = "tableHeader"
+    static let reuseID = "TableViewHeader"
     
-    private let label: UILabel = {
-        let label = UILabel()
-        label.text = "Прогноз на 5 дней"
-        label.textAlignment = .center
-        label.textColor = .white
-        //label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
+    // Create UIViews
+    private lazy var label = UILabel()
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        
+        // UIView Properties
+        label.text = "Прогноз на 5 дней"
+        label.textAlignment = .center
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Added the UI components
         contentView.addSubview(label)
+        
+        // TableHeader constraits
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -10),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
     }
     
     required init?(coder: NSCoder) {
         fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.sizeToFit()
-        label.frame = CGRect(x: 0, y: contentView.frame.size.height-10-label.frame.size.height, width: contentView.frame.size.width, height: label.frame.size.height)
     }
 }
 
