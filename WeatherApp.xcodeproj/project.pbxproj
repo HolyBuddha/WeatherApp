@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		121C34B728ABB05F00C4D710 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121C34B628ABB05F00C4D710 /* CollectionView.swift */; };
 		124414422893FC57002429EF /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124414412893FC57002429EF /* LocationService.swift */; };
 		124414442894137B002429EF /* WeatherConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124414432894137B002429EF /* WeatherConditions.swift */; };
 		1276C499289487A000986039 /* WeatherApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1276C498289487A000986039 /* WeatherApi.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		121C34B628ABB05F00C4D710 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		124414412893FC57002429EF /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		124414432894137B002429EF /* WeatherConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherConditions.swift; sourceTree = "<group>"; };
 		1276C498289487A000986039 /* WeatherApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApi.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				12DF325828A684E900E2EE6C /* TableView.swift */,
 				12EB866E289939D7002F31FD /* TableViewCell.swift */,
 				12DF325028A59FEC00E2EE6C /* TableViewHeader.swift */,
+				121C34B628ABB05F00C4D710 /* CollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				12DF325128A59FEC00E2EE6C /* TableViewHeader.swift in Sources */,
 				124414442894137B002429EF /* WeatherConditions.swift in Sources */,
 				124414422893FC57002429EF /* LocationService.swift in Sources */,
+				121C34B728ABB05F00C4D710 /* CollectionView.swift in Sources */,
 				12DF325928A684EA00E2EE6C /* TableView.swift in Sources */,
 				12F6B7D82885928700CCA40E /* NetworkManager.swift in Sources */,
 				1276C499289487A000986039 /* WeatherApi.swift in Sources */,
