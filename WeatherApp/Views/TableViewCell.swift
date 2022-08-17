@@ -50,6 +50,8 @@ class TableViewCell: UITableViewCell {
             stackViewCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             stackViewCell.heightAnchor.constraint(equalTo: contentView.heightAnchor),
         ])
+        
+        self.clipsToBounds = false
     }
     
     required init?(coder: NSCoder) {

@@ -10,11 +10,12 @@ import CoreLocation
 
 class MainViewController: UIViewController {
     
-    private var locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     private var weatherData: WeatherForecastData?
-    private var url = WeatherApi()
-    private var tableView = TableView()
-    private var coordinates = CLLocation()
+    private let url = WeatherApi()
+    private let tableView = TableView()
+    private let collectionView = CollectionView()
+    private let coordinates = CLLocation()
     
     
     private lazy var locationLabel: UILabel = {
@@ -48,12 +49,14 @@ class MainViewController: UIViewController {
     
     private lazy var stackView: UIStackView = {
         var stackView = UIStackView()
-        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel, tableView])
+        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel,
+        collectionView, tableView])
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
-        stackView.setCustomSpacing(50, after: weatherDescriptionLabel)
+        stackView.setCustomSpacing(view.frame.height / 20, after: weatherDescriptionLabel)
+        stackView.setCustomSpacing(view.frame.height / 20, after: collectionView)
         return stackView
     }()
     
@@ -61,14 +64,10 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 
         startLocationManager()
-//        setupSubviews(stackView)
-//        setConstraits()
-    }
-    
-    override func viewWillLayoutSubviews() {
         setupSubviews(stackView)
         setConstraits()
     }
+    
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -80,10 +79,12 @@ class MainViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(lessThanOrEqualTo: view.topAnchor, constant: 100),
+            stackView.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3)
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3),
+            collectionView.widthAnchor.constraint(equalTo: tableView.widthAnchor),
+            collectionView.heightAnchor.constraint(equalTo: tableView.heightAnchor, multiplier: 1/2)
         ])
     }
     
