@@ -22,6 +22,7 @@ struct WeatherDataList: Decodable {
     let main: Main
     var weather: [Weather] = []
     let wind: Wind
+    let dt_txt: String
 }
 
 struct Weather: Decodable {
@@ -58,25 +59,54 @@ struct Wind: Decodable {
 
 extension WeatherForecastData {
     
-    func takeDataFromArray() -> [String] {
+    func takeDataFromJSONfor5dayForecast() -> [WeatherDataList] {
         
-        var filteredArray: [String] = []
-        
+        var filteredArray: [WeatherDataList] = []
         
         for date in list {
             let dateFromDT = NSDate(timeIntervalSince1970: date.dt)
             let dayTimePeriodFormatter = DateFormatter()
             dayTimePeriodFormatter.dateFormat = "HH:mm"
             let result = dayTimePeriodFormatter.string(from: dateFromDT as Date)
-            //if result == "15:00" { filteredArray.append(date.dt) }
             if result == "15:00" {
-                let filteredDate = NSDate(timeIntervalSince1970: date.dt)
-                dayTimePeriodFormatter.dateFormat = "E, d.MM"
-                let answer = dayTimePeriodFormatter.string(from: filteredDate as Date)
-                filteredArray.append(answer)
+                filteredArray.append(date)
             }
         }
         return filteredArray
     }
-}
+    
+//    func takeDataFromJSONfor5dayForecast() -> [String] {
+//
+//        var filteredArray: [String] = []
+//
+//        for date in list {
+//            let dateFromDT = NSDate(timeIntervalSince1970: date.dt)
+//            let dayTimePeriodFormatter = DateFormatter()
+//            dayTimePeriodFormatter.dateFormat = "HH:mm"
+//            let result = dayTimePeriodFormatter.string(from: dateFromDT as Date)
+//            //if result == "15:00" { filteredArray.append(date.dt) }
+//            if result == "15:00" {
+//                let filteredDate = NSDate(timeIntervalSince1970: date.dt)
+//                dayTimePeriodFormatter.dateFormat = "E, d.MM"
+//                let answer = dayTimePeriodFormatter.string(from: filteredDate as Date)
+//                filteredArray.append(answer)
+//            }
+//        }
+//        return filteredArray
+//    }
+    func takeDataFromJSONforDailyForecast() -> [WeatherDataList] {
+        
+        var filteredArray: [WeatherDataList] = []
+        
+        for index in 0...8 {
+//            let dateFromDT = NSDate(timeIntervalSince1970: list[index].dt)
+//            let dayTimePeriodFormatter = DateFormatter()
+//            dayTimePeriodFormatter.dateFormat = "HH:mm"
+//            let result = dayTimePeriodFormatter.string(from: dateFromDT as Date)
+//            if result == "15:00" {
+                filteredArray.append(list[index])
+            }
+        return filteredArray
+        }
+    }
 

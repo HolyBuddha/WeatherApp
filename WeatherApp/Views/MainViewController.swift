@@ -20,21 +20,21 @@ class MainViewController: UIViewController {
     
     private lazy var locationLabel: UILabel = {
         let locationLabel = UILabel()
-        locationLabel.drawLabel(fontSize: 40)
+        locationLabel.drawLabel(fontSize: 40, weight: .medium)
         locationLabel.drawShadow()
         return locationLabel
     }()
     
     private lazy var tempLabel: UILabel = {
         let tempLabel = UILabel()
-        tempLabel.drawLabel(fontSize: 80)
+        tempLabel.drawLabel(fontSize: 80, weight: .medium)
         tempLabel.drawShadow()
         return tempLabel
     }()
     
     private lazy var weatherDescriptionLabel: UILabel  = {
         let weatherDescriptionLabel = UILabel()
-        weatherDescriptionLabel.drawLabel(fontSize: 20)
+        weatherDescriptionLabel.drawLabel(fontSize: 20, weight: .medium)
         weatherDescriptionLabel.drawShadow()
         return weatherDescriptionLabel
     }()
@@ -42,20 +42,25 @@ class MainViewController: UIViewController {
     private lazy var weatherIcon: UIImageView = {
         let weatherIcon = UIImageView()
         weatherIcon.drawShadow()
-        //weatherIcon.contentMode = .scaleAspectFill
         return weatherIcon
-        
+    }()
+    
+    private lazy var weatherFeelsLike: UILabel = {
+        let weatherFeelsLike = UILabel()
+        weatherFeelsLike.drawLabel(fontSize: 16, weight: .medium)
+        weatherFeelsLike.drawShadow()
+        return weatherFeelsLike
     }()
     
     private lazy var stackView: UIStackView = {
         var stackView = UIStackView()
-        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel,
+        stackView = UIStackView(arrangedSubviews: [locationLabel, tempLabel, weatherDescriptionLabel, weatherFeelsLike,
         collectionView, tableView])
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
-        stackView.setCustomSpacing(view.frame.height / 20, after: weatherDescriptionLabel)
+        stackView.setCustomSpacing(view.frame.height / 20, after: weatherFeelsLike)
         stackView.setCustomSpacing(view.frame.height / 20, after: collectionView)
         return stackView
     }()
@@ -80,6 +85,7 @@ class MainViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: 40),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/3),
@@ -93,6 +99,7 @@ class MainViewController: UIViewController {
         tempLabel.text = checkTemp(weatherData?.list.first?.main.temp ?? 0)
         weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherData?.list.first?.weather[0].id ?? 200]
         weatherIcon.image = UIImage(named: weatherData?.list.first?.weather[0].icon ?? "ERROR")
+        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherData?.list.first?.main.feelsLike ?? 0)
         assignbackground()
     }
     
@@ -133,10 +140,11 @@ class MainViewController: UIViewController {
             print(longitude)
             self.weatherData = weatherData
             self.tableView.setData(weatherData: weatherData)
+            self.collectionView.setData(weatherData: weatherData)
             self.updateLabels()
             self.tableView.reloadData()
-            //self.tableView.tableHeaderView = self.headerForTableView
-            print(self.weatherData?.list ?? "ERROR")
+            self.collectionView.reloadData()
+            print(self.weatherData?.list.first ?? "ERROR")
         }
     }
     

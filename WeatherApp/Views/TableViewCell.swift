@@ -23,35 +23,32 @@ class TableViewCell: UITableViewCell {
         
         // StackView Properties
         stackViewCell.axis  = NSLayoutConstraint.Axis.horizontal
+        stackViewCell.alignment = .center
         stackViewCell.distribution  = UIStackView.Distribution.equalCentering
         stackViewCell.spacing = 5
         stackViewCell.translatesAutoresizingMaskIntoConstraints = false
         stackViewCell.sizeToFit()
         
         // weatherLabels Properties
-        weatherDay.textColor = .white
-        weatherDay.adjustsFontSizeToFitWidth = true
-        weatherTempMinMax.textColor = .white
-        weatherTempMinMax.adjustsFontSizeToFitWidth = true
-        
-        // weatherImage Properties
-        weatherImage.tintColor = .white
+        weatherDay.drawLabel(fontSize: 16, weight: .medium)
+        weatherTempMinMax.drawLabel(fontSize: 16, weight: .medium)
         
         // Added the UI components
         stackViewCell.addArrangedSubview(weatherDay)
         stackViewCell.addArrangedSubview(weatherImage)
         stackViewCell.addArrangedSubview(weatherTempMinMax)
-        contentView.addSubview(stackViewCell)
+        addSubview(stackViewCell)
         
         // StackView Constraits
         NSLayoutConstraint.activate([
-            stackViewCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            stackViewCell.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stackViewCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            stackViewCell.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+            stackViewCell.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            stackViewCell.topAnchor.constraint(equalTo: topAnchor),
+            stackViewCell.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            stackViewCell.bottomAnchor.constraint(equalTo: bottomAnchor),
+            weatherImage.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
         
-        self.clipsToBounds = false
+        //self.clipsToBounds = false
     }
     
     required init?(coder: NSCoder) {

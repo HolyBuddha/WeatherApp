@@ -9,23 +9,23 @@ import UIKit
 
 class TableView: UITableView,UITableViewDataSource, UITableViewDelegate  {
     
-    var weatherData: WeatherForecastData?
-    
+    private var weatherData = [WeatherDataList?]()
+   
     init() {
+        
         super.init(frame: .zero, style: .plain)
         
         //Configure TableView
+        
         register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.reuseID)
         register(TableViewHeader.self, forHeaderFooterViewReuseIdentifier: TableViewHeader.reuseID)
         dataSource = self
         delegate = self
         isScrollEnabled = true
-       
-        drawShadow()
     }
     
     func setData(weatherData: WeatherForecastData) {
-        self.weatherData = weatherData
+        self.weatherData = weatherData.takeDataFromJSONfor5dayForecast()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -33,7 +33,7 @@ class TableView: UITableView,UITableViewDataSource, UITableViewDelegate  {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        weatherData?.takeDataFromArray().count ?? 0
+        weatherData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -47,10 +47,10 @@ class TableView: UITableView,UITableViewDataSource, UITableViewDelegate  {
         // Configure the Cell
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.reuseID, for: indexPath) as! TableViewCell
         cell.backgroundColor = UIColor.clear
-        cell.weatherDay.text = weatherData?.takeDataFromArray()[indexPath.row]
-        cell.weatherTempMinMax.text = checkTemp(weatherData?.list[indexPath.row].main.tempMin ?? 0) +
-        " ... " + checkTemp(weatherData?.list[indexPath.row].main.tempMax ?? 0)
-        cell.weatherImage.image = UIImage(named: weatherData?.list[indexPath.row].weather[0].icon ?? "ERROR")
+        cell.weatherDay.text = convertDateToString(unixDate: weatherData[indexPath.row]?.dt ?? 0, dateFormat:"E, d.MM")
+        cell.weatherTempMinMax.text = checkTemp(weatherData[indexPath.row]?.main.tempMin ?? 0) +
+        "..." + checkTemp(weatherData[indexPath.row]?.main.tempMax ?? 0)
+        cell.weatherImage.image = UIImage(named: weatherData[indexPath.row]?.weather[0].icon ?? "default")
         return cell
     }
     
