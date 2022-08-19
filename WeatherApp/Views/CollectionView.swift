@@ -10,7 +10,7 @@ import UIKit
 class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource,
                       UICollectionViewDelegateFlowLayout  {
     
-    private var weatherData = [WeatherDataList?]()
+    private var weatherData : WeatherForecastData?
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -31,11 +31,11 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     }
     
     func setData(weatherData: WeatherForecastData) {
-        self.weatherData = weatherData.takeDataFromJSONforDailyForecast()
+        self.weatherData = weatherData
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        weatherData.count
+        weatherData?.hourly.count ?? 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -45,9 +45,9 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         collectionView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
         collectionView.layer.borderWidth = 1
         
-        cell.timeLabel.text = convertDateToString(unixDate: weatherData[indexPath.row]?.dt ?? 0, dateFormat: "HH:mm")
-        cell.weatherImage.image = UIImage(named: weatherData[indexPath.row]?.weather[0].icon ?? "default")
-        cell.tempLabel.text = checkTemp(weatherData[indexPath.row]?.main.temp ?? 0)
+       cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
+    cell.weatherImage.image = UIImage(named: weatherData?.hourly[indexPath.row].weather[0].icon ?? "default")
+        cell.tempLabel.text = checkTemp(weatherData?.hourly[indexPath.row].temp ?? 0)
                 return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

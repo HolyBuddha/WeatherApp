@@ -19,7 +19,7 @@ class TableViewHeader: UITableViewHeaderFooterView {
         
         // UIView Properties
         headerOfTableView.drawLabel(fontSize: 16, weight: .regular, textAligment: .left)
-        headerOfTableView.text = "Прогноз на 5 дней"
+        headerOfTableView.text = "Прогноз на 7 дней"
         //label.textAlignment = .center
 //        headerOfTableView.textColor = .white
         headerOfTableView.translatesAutoresizingMaskIntoConstraints = false
