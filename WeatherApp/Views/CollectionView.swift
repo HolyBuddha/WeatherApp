@@ -37,6 +37,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         self.weatherData = weatherData
     }
     
+    // Configure the CollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         weatherData?.hourly.count ?? 1
     }

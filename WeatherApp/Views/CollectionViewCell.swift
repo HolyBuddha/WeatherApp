@@ -11,6 +11,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     static let reuseId = "CollectionViewCell"
     
+    // Create UIViews
     lazy var stackView = UIStackView()
     lazy var timeLabel = UILabel()
     lazy var weatherImage = UIImageView()
@@ -37,8 +38,8 @@ class CollectionViewCell: UICollectionViewCell {
         tempLabel.drawLabel(fontSize: 18, weight: .semibold)
         
         // weatherImage Properties
-        weatherImage.tintColor = .white
-        weatherImage.contentMode = .scaleAspectFit
+        //weatherImage.tintColor = .white
+        //weatherImage.contentMode = .scaleAspectFit
         
         
         // Added the UI components
@@ -48,7 +49,7 @@ class CollectionViewCell: UICollectionViewCell {
         contentView.addSubview(stackView)
         
         
-        // stackView constraints
+        //Set the constraits
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),

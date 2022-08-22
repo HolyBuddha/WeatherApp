@@ -11,6 +11,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
     
     static let reuseId = "HeaderCollectionReusableView"
     
+    // Create UIViews
     lazy var windImage = UIImageView()
     lazy var pressureImage = UIImageView()
     lazy var humidityImage = UIImageView()
@@ -26,9 +27,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
         super.init(frame: frame)
         
         // Content Properties
-//        layer.cornerRadius = 20
-//        layer.borderColor = CGColor(gray: 1, alpha: 0.5)
-//        layer.borderWidth = 1
+
         
         // StackViews Properties
         labelsStackView.axis  = NSLayoutConstraint.Axis.vertical
@@ -68,6 +67,7 @@ class HeaderCollectionReusableView: UICollectionReusableView {
         addSubview(labelsStackView)
         addSubview(imagesStackView)
         
+        //Set the constraits
         NSLayoutConstraint.activate([
             imagesStackView.topAnchor.constraint(equalTo: topAnchor),
             imagesStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),

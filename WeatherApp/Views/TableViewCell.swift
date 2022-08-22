@@ -47,8 +47,6 @@ class TableViewCell: UITableViewCell {
             stackViewCell.bottomAnchor.constraint(equalTo: bottomAnchor),
             weatherImage.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
-        
-        //self.clipsToBounds = false
     }
     
     required init?(coder: NSCoder) {

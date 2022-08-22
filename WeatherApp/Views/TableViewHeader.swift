@@ -17,11 +17,9 @@ class TableViewHeader: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         
-        // UIView Properties
+        // Labels Properties
         headerOfTableView.drawLabel(fontSize: 16, weight: .regular, textAligment: .left)
         headerOfTableView.text = "Прогноз на 7 дней"
-        //label.textAlignment = .center
-//        headerOfTableView.textColor = .white
         headerOfTableView.translatesAutoresizingMaskIntoConstraints = false
         
         // Added the UI components

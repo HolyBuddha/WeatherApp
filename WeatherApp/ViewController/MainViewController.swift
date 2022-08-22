@@ -11,7 +11,10 @@ import CoreLocation
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private let locationManager = CLLocationManager()
-    private var weatherData: WeatherForecastData?
+    
+    private var weatherForecastData: WeatherForecastData?
+    private var weatherCurrentData: WeatherCurrentData?
+    
     private let url = WeatherApi()
     private let tableView = TableView()
     private let collectionView = CollectionView()
@@ -20,24 +23,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
-        func getHeightFromDisplay(displayHeight: Double) -> Double {
-            var height: Double = 0
-            print(displayHeight)
-            if displayHeight < 560 {
-                height = 950 - displayHeight
-            } else if displayHeight < 850 {
-                height = 950 - displayHeight
-            } else {
-                height = 950 - displayHeight
-            }
-            return displayHeight + height
-        }
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.delegate = self
         scroll.showsVerticalScrollIndicator = false
         scroll.contentSize = CGSize(
             width: stackView.frame.size.width,
-            height: getHeightFromDisplay(displayHeight: view.frame.size.height))
+            height: scroll.getHeightFromDisplay(displayHeight: view.frame.size.height))
         scroll.bounces = true
         return scroll
     }()
@@ -118,17 +109,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         
         NSLayoutConstraint.activate([
             
-//            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            
-//            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-//            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-//            stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-//            stackView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 20),
-//            stackView.rightAnchor.constraint(equalTo: scrollView.rightAnchor, constant: 20),
-            
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: 40),
-            //stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
            
@@ -149,11 +131,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func updateLabels() {
-        locationLabel.text = weatherData?.timezone ?? "ERROR"
-        tempLabel.text = checkTemp(weatherData?.current.temp ?? 0)
-        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherData?.current.weather[0].id ?? 200]
+        locationLabel.text = weatherCurrentData?.name ?? "ERROR"
+        tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
+        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
         //weatherIcon.image = UIImage(named: weatherData?.list.first?.weather[0].icon ?? "ERROR")
-        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherData?.current.feelsLike ?? 0)
+        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
         assignbackground()
     }
     
@@ -169,7 +151,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private func assignbackground() {
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = updateBackgroundImage(id: weatherData?.current.weather[0].id ?? 200)
+        backgroundImage.image = updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
     }
@@ -183,25 +165,28 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             locationManager.pausesLocationUpdatesAutomatically = true
             locationManager.startUpdatingLocation()
-           
         }
     }
     
     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        let urlWithCoordinates = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
-        NetworkManager.shared.fetchData(from: urlWithCoordinates) { weatherData in
-            print(urlWithCoordinates)
-            print("latitude: " + latitude.description)
-            print("longitude: " + longitude.description)
-            self.weatherData = weatherData
+        let urlForecastDaily = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
+        let urlCurrentWeather = url.apiForCurrentWeather(latitude: latitude, longitude: longitude)
+        
+        NetworkManager.shared.fetchData(from: urlCurrentWeather) { (weatherData: WeatherCurrentData) in
+            self.weatherCurrentData = weatherData
+        }
+        NetworkManager.shared.fetchData(from: urlForecastDaily) { (weatherData: WeatherForecastData) in
+            self.weatherForecastData = weatherData
             self.tableView.setData(weatherData: weatherData)
             self.collectionView.setData(weatherData: weatherData)
             self.updateLabels()
             self.tableView.reloadData()
-            //self.tableView.layoutIfNeeded()
-            //self.tableView.heightAnchor.constraint(equalToConstant: self.tableView.contentSize.height).isActive = true
             self.collectionView.reloadData()
-            //print(self.weatherData?.list.first ?? "ERROR")
+        }
+        print(urlForecastDaily)
+        print(urlCurrentWeather)
+        print("latitude: " + latitude.description)
+        print("longitude: " + longitude.description)
         }
     }
     
@@ -214,7 +199,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
     }
-}
 
 extension MainViewController: CLLocationManagerDelegate {
     
