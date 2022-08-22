@@ -20,6 +20,10 @@ class CollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+//        layer.cornerRadius = 20
+//        layer.borderColor = CGColor(gray: 1, alpha: 0.5)
+//        layer.borderWidth = 1
+        
         // StackView Properties
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.alignment = .center
@@ -46,8 +50,8 @@ class CollectionViewCell: UICollectionViewCell {
         
         // stackView constraints
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])

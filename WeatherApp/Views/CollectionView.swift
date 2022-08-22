@@ -20,10 +20,13 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         delegate = self
         dataSource = self
         register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.reuseId)
+        register(HeaderCollectionReusableView.self,
+                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                 withReuseIdentifier: HeaderCollectionReusableView.reuseId)
         
-       
+        
         layout.minimumLineSpacing = 10
-        contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +54,19 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
                 return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: frame.width/6, height: frame.height-20)
+        CGSize(width: frame.width / 6, height: frame.height)
+    }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                     withReuseIdentifier: HeaderCollectionReusableView.reuseId,
+                                                                     for: indexPath) as! HeaderCollectionReusableView
+        header.humidityLabel.text = String(Int(weatherData?.current.humidity ?? 0)) + "%"
+        header.windSpeedLabel.text = String(Int(weatherData?.current.windSpeed ?? 0)) + " м/с"
+        header.pressureLabel.text = String(Int(weatherData?.current.pressure ?? 0)) + " мм"
+        return header
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        CGSize(width: frame.width / 4, height: frame.height)
     }
     
     required init?(coder aDecoder: NSCoder) {

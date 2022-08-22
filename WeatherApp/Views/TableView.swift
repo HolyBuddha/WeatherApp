@@ -43,6 +43,7 @@ class TableView: UITableView,UITableViewDataSource, UITableViewDelegate  {
         tableView.layer.cornerRadius = 20
         tableView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
         tableView.layer.borderWidth = 1
+        tableView.separatorColor = UIColor(white: 1, alpha: 0.5)
         
         // Configure the Cell
         let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.reuseID, for: indexPath) as! TableViewCell
