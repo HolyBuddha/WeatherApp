@@ -1,8 +1,8 @@
 //
-//  NetworkManager.swift
-//  WeatherApp
+//  AppDelegate.swift
+//  PryanikiApp
 //
-//  Created by Vladimir Izmaylov on 18.07.2022.
+//  Created by Vladimir Izmaylov on 23.08.2022.
 //
 
 import Foundation

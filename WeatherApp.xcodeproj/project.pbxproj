@@ -82,12 +82,32 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		12C8DAC428B4025800D515DD /* ViewController */ = {
+		12C8DAC428B4025800D515DD /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				12FC0CDD28627AD700FDCCEA /* MainViewController.swift */,
 			);
-			path = ViewController;
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		12C8DAC928B4CE8000D515DD /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				12FC0CD928627AD700FDCCEA /* AppDelegate.swift */,
+				12FC0CDB28627AD700FDCCEA /* SceneDelegate.swift */,
+				12FC0CE428627AD900FDCCEA /* LaunchScreen.storyboard */,
+				12FC0CE728627AD900FDCCEA /* Info.plist */,
+			);
+			name = SupportingFiles;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		12C8DACA28B4CEE200D515DD /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				12FC0CE228627AD900FDCCEA /* Assets.xcassets */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 		12DF325328A5B3D700E2EE6C /* Extensions */ = {
@@ -144,16 +164,13 @@
 		12FC0CD828627AD700FDCCEA /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				12F6B7D62885926F00CCA40E /* Services */,
+				12C8DAC928B4CE8000D515DD /* SupportingFiles */,
 				12981CBF288582550032F16F /* Models */,
-				12FC0CD928627AD700FDCCEA /* AppDelegate.swift */,
-				12C8DAC428B4025800D515DD /* ViewController */,
 				12EB866D289939AF002F31FD /* Views */,
+				12C8DAC428B4025800D515DD /* ViewControllers */,
+				12F6B7D62885926F00CCA40E /* Services */,
+				12C8DACA28B4CEE200D515DD /* Source */,
 				12DF325328A5B3D700E2EE6C /* Extensions */,
-				12FC0CDB28627AD700FDCCEA /* SceneDelegate.swift */,
-				12FC0CE228627AD900FDCCEA /* Assets.xcassets */,
-				12FC0CE428627AD900FDCCEA /* LaunchScreen.storyboard */,
-				12FC0CE728627AD900FDCCEA /* Info.plist */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -389,7 +406,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q3NH456PVT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WeatherApp/Info.plist;
+				INFOPLIST_FILE = WeatherApp/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Приложению необходимо использовать Ваше местоположение";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -417,7 +434,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q3NH456PVT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WeatherApp/Info.plist;
+				INFOPLIST_FILE = WeatherApp/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Приложению необходимо использовать Ваше местоположение";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
