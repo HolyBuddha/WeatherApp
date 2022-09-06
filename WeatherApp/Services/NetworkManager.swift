@@ -1,16 +1,16 @@
 //
-//  AppDelegate.swift
-//  PryanikiApp
+//  ViewController.swift
+//  WeatherApp
 //
-//  Created by Vladimir Izmaylov on 23.08.2022.
+//  Created by Vladimir Izmaylov on 22.06.2022.
 //
 
 import Foundation
 
-class NetworkManager {
+final class NetworkManager {
     
     static let shared = NetworkManager()
-
+    
     private init() {}
     
     func fetchData<T: Decodable>(from url: String?, with completion: @escaping(T) -> Void) {
@@ -32,4 +32,4 @@ class NetworkManager {
                 }
             }.resume()
         }
-}
+    }

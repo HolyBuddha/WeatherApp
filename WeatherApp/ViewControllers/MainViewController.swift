@@ -16,8 +16,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     private var weatherCurrentData: WeatherCurrentData?
     
     private let url = WeatherApi()
-    private let tableView = TableView()
-    private let collectionView = CollectionView()
+    private lazy var tableView = TableView()
+    private lazy var collectionView = CollectionView()
     private let coordinates = CLLocation()
     
     
@@ -79,6 +79,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
+        
         //stackView.backgroundColor = .green
         //stackView.setCustomSpacing(view.frame.height / 20, after: weatherFeelsLike)
         //stackView.setCustomSpacing(view.frame.height / 20, after: collectionView)
@@ -89,12 +90,34 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
 
         startLocationManager()
+        //setupNavigationBar()
         scrollView.addSubview(collectionView)
         scrollView.addSubview(tableView)
         setupSubviews(stackView, scrollView)
         setConstraits()
     }
     
+//    private func setupNavigationBar() {
+//        title = "Task List"
+//        //navigationController?.navigationBar.prefersLargeTitles = false
+//
+//        let navBarAppearance = UINavigationBarAppearance()
+//
+//        navBarAppearance.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+//        //navBarAppearance.configureWithOpaqueBackground()
+//        //navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//        //navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+//
+////        navigationItem.rightBarButtonItem = UIBarButtonItem(
+////            barButtonSystemItem: .add,
+////            target: self,
+////            action: #selector(addNewTask)
+////        )
+//
+//        navigationController?.navigationBar.tintColor = .green
+//        navigationController?.navigationBar.standardAppearance = navBarAppearance
+//        navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+//    }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -109,8 +132,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         
         NSLayoutConstraint.activate([
             
-            stackView.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -40),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: -40),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
            
@@ -134,7 +157,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         locationLabel.text = weatherCurrentData?.name ?? "ERROR"
         tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
         weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
-        //weatherIcon.image = UIImage(named: weatherData?.list.first?.weather[0].icon ?? "ERROR")
         weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
         assignbackground()
     }
@@ -188,7 +210,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
         }
-    }
     
     private func updateBackgroundImage(id: Int) -> UIImage {
         switch id {
@@ -199,6 +220,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
     }
+}
+
 
 extension MainViewController: CLLocationManagerDelegate {
     
@@ -210,4 +233,26 @@ extension MainViewController: CLLocationManagerDelegate {
         }
     }
 }
-
+extension MainViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        
+        if scrollView.contentOffset.y > 20 {
+            
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
+                self.weatherFeelsLike.text = ""
+                self.tempLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+                self.stackView.spacing = 0
+            }
+        } else {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
+                self.stackView.spacing = 5
+                self.updateLabels()
+                self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
+            }
+        }
+        //print(scrollView.contentOffset.y)
+        }
+}
+              
+             

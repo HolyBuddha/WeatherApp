@@ -82,15 +82,7 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		12C8DAC428B4025800D515DD /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				12FC0CDD28627AD700FDCCEA /* MainViewController.swift */,
-			);
-			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		12C8DAC928B4CE8000D515DD /* SupportingFiles */ = {
+		12C0D54328B4F22A0086430B /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
 				12FC0CD928627AD700FDCCEA /* AppDelegate.swift */,
@@ -98,8 +90,15 @@
 				12FC0CE428627AD900FDCCEA /* LaunchScreen.storyboard */,
 				12FC0CE728627AD900FDCCEA /* Info.plist */,
 			);
-			name = SupportingFiles;
-			path = Views;
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		12C8DAC428B4025800D515DD /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				12FC0CDD28627AD700FDCCEA /* MainViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		12C8DACA28B4CEE200D515DD /* Source */ = {
@@ -164,7 +163,7 @@
 		12FC0CD828627AD700FDCCEA /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				12C8DAC928B4CE8000D515DD /* SupportingFiles */,
+				12C0D54328B4F22A0086430B /* SupportingFiles */,
 				12981CBF288582550032F16F /* Models */,
 				12EB866D289939AF002F31FD /* Views */,
 				12C8DAC428B4025800D515DD /* ViewControllers */,

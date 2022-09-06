@@ -15,7 +15,14 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
         super.init(frame: .zero, collectionViewLayout: layout)
+        
+        contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        translatesAutoresizingMaskIntoConstraints = false
+        
         
         delegate = self
         dataSource = self
@@ -24,13 +31,11 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
                  forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                  withReuseIdentifier: HeaderCollectionReusableView.reuseId)
         
-        
-        layout.minimumLineSpacing = 10
-        contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
-        showsHorizontalScrollIndicator = false
-        showsVerticalScrollIndicator = false
-        translatesAutoresizingMaskIntoConstraints = false
-        
+        backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        layer.cornerRadius = 20
+        layer.borderColor = CGColor(gray: 1, alpha: 0.5)
+        layer.borderWidth = 1
+      
     }
     
     func setData(weatherData: WeatherForecastData) {
@@ -44,15 +49,12 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: CollectionViewCell.reuseId, for: indexPath) as! CollectionViewCell
-        collectionView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
-        collectionView.layer.cornerRadius = 20
-        collectionView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
-        collectionView.layer.borderWidth = 1
         
-       cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
-    cell.weatherImage.image = UIImage(named: weatherData?.hourly[indexPath.row].weather[0].icon ?? "default")
+        
+        cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
+        cell.weatherImage.image = UIImage(named: weatherData?.hourly[indexPath.row].weather[0].icon ?? "default")
         cell.tempLabel.text = checkTemp(weatherData?.hourly[indexPath.row].temp ?? 0)
-                return cell
+        return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: frame.width / 6, height: frame.height)
@@ -74,6 +76,6 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         fatalError("init(coder:) has not been implemented")
     }
 }
-    
-    
+
+
 

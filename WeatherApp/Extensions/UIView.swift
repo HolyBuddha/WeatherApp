@@ -18,4 +18,12 @@ extension UIView {
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
     }
+    
+    func animateCloseWith(float: CGFloat) {
+        UIView.animate(withDuration: 1, animations: { () -> Void in
+            self.frame.size.height = self.frame.size.height - float
+            self.alpha = CGFloat(Float(0.1)) //for the fade effect
+                })
+            self.layoutIfNeeded()
+    }
 }

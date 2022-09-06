@@ -39,7 +39,7 @@ class CollectionViewCell: UICollectionViewCell {
         
         // weatherImage Properties
         //weatherImage.tintColor = .white
-        //weatherImage.contentMode = .scaleAspectFit
+        //weatherImage.clipsToBounds = true
         
         
         // Added the UI components

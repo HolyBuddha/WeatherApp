@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TableView: UITableView,UITableViewDataSource, UITableViewDelegate  {
+class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
     
     private var weatherData: WeatherForecastData?
    
