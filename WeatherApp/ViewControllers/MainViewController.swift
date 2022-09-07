@@ -11,14 +11,17 @@ import CoreLocation
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private let locationManager = CLLocationManager()
+    private let geocoder = CLGeocoder()
+    private var locationName = ""
     
     private var weatherForecastData: WeatherForecastData?
     private var weatherCurrentData: WeatherCurrentData?
     
+    private let coordinates = CLLocation()
     private let url = WeatherApi()
+    
     private lazy var tableView = TableView()
     private lazy var collectionView = CollectionView()
-    private let coordinates = CLLocation()
     
     
     private lazy var scrollView: UIScrollView = {
@@ -32,7 +35,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         scroll.bounces = true
         return scroll
     }()
-    
+   
     private lazy var locationLabel: UILabel = {
         let locationLabel = UILabel()
         locationLabel.drawLabel(fontSize: 40, weight: .medium)
@@ -74,7 +77,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             tempLabel,
             weatherDescriptionLabel,
             weatherFeelsLike
-    ])
+        ])
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
@@ -88,36 +91,48 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         startLocationManager()
-        //setupNavigationBar()
+        setupNavigationBar()
         scrollView.addSubview(collectionView)
         scrollView.addSubview(tableView)
         setupSubviews(stackView, scrollView)
         setConstraits()
     }
     
-//    private func setupNavigationBar() {
-//        title = "Task List"
-//        //navigationController?.navigationBar.prefersLargeTitles = false
-//
-//        let navBarAppearance = UINavigationBarAppearance()
-//
-//        navBarAppearance.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
-//        //navBarAppearance.configureWithOpaqueBackground()
-//        //navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-//        //navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-//
-////        navigationItem.rightBarButtonItem = UIBarButtonItem(
-////            barButtonSystemItem: .add,
-////            target: self,
-////            action: #selector(addNewTask)
-////        )
-//
-//        navigationController?.navigationBar.tintColor = .green
-//        navigationController?.navigationBar.standardAppearance = navBarAppearance
-//        navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //setupNavigationBar()
+    }
+    
+        private func setupNavigationBar() {
+            
+            rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(updateLabels))
+            leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(updateLabels))
+            //title = "Task List"
+            //navigationController?.navigationBar.prefersLargeTitles = false
+    
+            //let navBarAppearance = UINavigationBarAppearance()
+    
+//            navBarAppearance.backgroundColor = .clear
+//            navBarAppearance.configureWithOpaqueBackground()
+//            navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.blue]
+//            navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.blue]
+    
+//            navigationItem.rightBarButtonItem = UIBarButtonItem(
+//                barButtonSystemItem: .edit,
+//                target: self,
+//                action: #selector(updateLabels)
+//            )
+            //navigationItem.rightBarButtonItem?.image = UIImage(systemName: "pencil")
+            navigationController?.view.backgroundColor = .clear
+            navigationController?.navigationBar.tintColor = .white
+//            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//            navigationController?.navigationBar.shadowImage = UIImage()
+//            navigationController?.navigationBar.isTranslucent = true
+            //navigationController?.navigationBar.standardAppearance = navBarAppearance
+            //navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+        }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -130,13 +145,15 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        
         NSLayoutConstraint.activate([
+
             
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: -40),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: 40),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
-           
+            
             
             scrollView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
             scrollView.heightAnchor.constraint(equalTo: view.heightAnchor),
@@ -153,11 +170,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         ])
     }
     
-    private func updateLabels() {
-        locationLabel.text = weatherCurrentData?.name ?? "ERROR"
+   @objc private func updateLabels() {
+        locationLabel.text = locationName
+        //locationLabel.text = weatherCurrentData?.name ?? "ERROR"
         tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
         weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
         weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
+        print(weatherForecastData?.current.weather[0].id ?? "no id")
         assignbackground()
     }
     
@@ -209,16 +228,45 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         print(urlCurrentWeather)
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
-        }
+    }
     
     private func updateBackgroundImage(id: Int) -> UIImage {
         switch id {
-        case 800 : return UIImage(#imageLiteral(resourceName: "back_weather"))
-        case 801... : return UIImage(#imageLiteral(resourceName: "darkCloudy"))
-        case ...300 : return UIImage(#imageLiteral(resourceName: "storm"))
+        case 800 : return UIImage(#imageLiteral(resourceName: "cleanSky"))
+        case 801...802: return UIImage(#imageLiteral(resourceName: "littleCloudy"))
+        case 803...804 : return UIImage(#imageLiteral(resourceName: "darkCloudy"))
+        case ...232 : return UIImage(#imageLiteral(resourceName: "storm"))
         default:
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
+    }
+    
+    private func rightBarButtonItem(iconNameButton: String, selector: Selector) {
+        let button = UIButton()
+        button.frame = CGRect(x: -20, y: 0, width: 50, height: 50)
+        //button.backgroundColor = .orange
+        button.setImage(UIImage(systemName: iconNameButton), for: .normal)
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFit
+        //button.backgroundColor = .orange
+        
+        let buttonBarButton = UIBarButtonItem(customView: button)
+        //let buttonBarButton = UIBarButtonItem(customView: UIView(frame: CGRect(x: -20, y: -20, width: 30, height: 30)))
+        //buttonBarButton.customView?.addSubview(button)
+        //buttonBarButton.customView?.frame = button.frame
+
+        self.navigationItem.rightBarButtonItem = buttonBarButton
+    }
+    
+    private func leftBarButtonItem(iconNameButton: String, selector: Selector) {
+        let button = UIButton()
+        button.frame = CGRect(x: -20, y: 0, width: 50, height: 50)
+        //button.backgroundColor = .orange
+        button.setImage(UIImage(systemName: iconNameButton), for: .normal)
+        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.imageView?.contentMode = .scaleAspectFit
+        let buttonBarButton = UIBarButtonItem(customView: button)
+        self.navigationItem.leftBarButtonItem = buttonBarButton
     }
 }
 
@@ -226,11 +274,17 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
 extension MainViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        //get coordinates
         if let lastLocation = locations.last {
             locationManager.stopUpdatingLocation()
             updateWeatherInfo(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
-            
+            //get location name
+            geocoder.reverseGeocodeLocation(lastLocation, preferredLocale: Locale.init(identifier: "ru_RU")) { placemarks, error in
+                let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
+                self.locationName = locality
+            }
         }
+        
     }
 }
 extension MainViewController {
@@ -244,15 +298,19 @@ extension MainViewController {
                 self.tempLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
                 self.stackView.spacing = 0
             }
-        } else {
+        } else if scrollView.contentOffset.y < 20 && scrollView.contentOffset.y > -200 {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
                 self.stackView.spacing = 5
                 self.updateLabels()
                 self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
+                print("back")
+            }
+        } else {
+            startLocationManager()
+            print("update")
             }
         }
         //print(scrollView.contentOffset.y)
-        }
-}
-              
-             
+    }
+
+
