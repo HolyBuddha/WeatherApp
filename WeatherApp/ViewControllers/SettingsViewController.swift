@@ -11,7 +11,6 @@ class SettingsViewController: UIViewController {
     
     private lazy var stackView: UIStackView = {
         var stackView = UIStackView()
-        //stackView.backgroundColor = .blue
         stackView = UIStackView(arrangedSubviews: [
             labelForSwitchTemperature,
             segmentForTemperature
@@ -48,7 +47,6 @@ class SettingsViewController: UIViewController {
         labelForSwitchTemperature.drawLabel(fontSize: 20, weight: .medium)
         labelForSwitchTemperature.textAlignment = .left
         labelForSwitchTemperature.textColor = .white
-        //labelForSwitchTemperature.backgroundColor = .purple
         return labelForSwitchTemperature
     }()
 
@@ -72,7 +70,6 @@ class SettingsViewController: UIViewController {
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             stackView.topAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: view.frame.size.height / 14),
-            //labelForSwitchTemperature.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50)
         ])
     }
     private func setupNavigationBar() {
