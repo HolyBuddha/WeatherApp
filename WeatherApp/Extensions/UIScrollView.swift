@@ -14,11 +14,11 @@ func getHeightFromDisplay(displayHeight: Double) -> Double {
     var height: Double = 0
     print(displayHeight)
     if displayHeight < 560 {
-        height = 950 - displayHeight
+        height = 900 - displayHeight
     } else if displayHeight < 850 {
-        height = 950 - displayHeight
+        height = 900 - displayHeight
     } else {
-        height = 950 - displayHeight
+        height = 930 - displayHeight
     }
     return displayHeight + height
 }

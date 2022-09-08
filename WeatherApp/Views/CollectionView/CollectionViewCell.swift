@@ -35,11 +35,12 @@ class CollectionViewCell: UICollectionViewCell {
         
         // Labels Properties
         timeLabel.drawLabel(fontSize: 15, weight: .medium)
-        tempLabel.drawLabel(fontSize: 18, weight: .semibold)
+        tempLabel.drawLabel(fontSize: 18, weight: .medium)
         
         // weatherImage Properties
-        //weatherImage.tintColor = .white
+        weatherImage.tintColor = .white
         //weatherImage.clipsToBounds = true
+        weatherImage.contentMode = .scaleAspectFit
         
         
         // Added the UI components

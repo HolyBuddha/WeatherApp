@@ -35,7 +35,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         layer.cornerRadius = 20
         layer.borderColor = CGColor(gray: 1, alpha: 0.5)
         layer.borderWidth = 1
-      
+        
     }
     
     func setData(weatherData: WeatherForecastData) {
@@ -52,7 +52,7 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         
         
         cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
-        cell.weatherImage.image = UIImage(named: weatherData?.hourly[indexPath.row].weather[0].icon ?? "default")
+        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")
         cell.tempLabel.text = checkTemp(weatherData?.hourly[indexPath.row].temp ?? 0)
         return cell
     }
@@ -61,8 +61,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-                                                                     withReuseIdentifier: HeaderCollectionReusableView.reuseId,
-                                                                     for: indexPath) as! HeaderCollectionReusableView
+            withReuseIdentifier: HeaderCollectionReusableView.reuseId,
+            for: indexPath) as! HeaderCollectionReusableView
         header.humidityLabel.text = String(Int(weatherData?.current.humidity ?? 0)) + "%"
         header.windSpeedLabel.text = String(Int(weatherData?.current.windSpeed ?? 0)) + " м/с"
         header.pressureLabel.text = String(Int(weatherData?.current.pressure ?? 0)) + " мм"

@@ -33,6 +33,11 @@ class TableViewCell: UITableViewCell {
         weatherDay.drawLabel(fontSize: 16, weight: .medium)
         weatherTempMinMax.drawLabel(fontSize: 16, weight: .medium)
         
+        // weatherImage properties
+        weatherImage.tintColor = .white
+        weatherImage.contentMode = .scaleAspectFit
+        
+        
         // Added the UI components
         stackViewCell.addArrangedSubview(weatherDay)
         stackViewCell.addArrangedSubview(weatherImage)

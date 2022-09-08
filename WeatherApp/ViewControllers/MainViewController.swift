@@ -23,17 +23,24 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     private lazy var tableView = TableView()
     private lazy var collectionView = CollectionView()
     
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .white
+        return refreshControl
+    }()
     
     private lazy var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.delegate = self
-        scroll.showsVerticalScrollIndicator = false
-        scroll.contentSize = CGSize(
+        let scrollView = UIScrollView()
+        
+        scrollView.refreshControl = refreshControl
+        scrollView.refreshControl?.addTarget(self, action: #selector(startLocationManager), for: .valueChanged)
+        scrollView.delegate = self
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentSize = CGSize(
             width: stackView.frame.size.width,
-            height: scroll.getHeightFromDisplay(displayHeight: view.frame.size.height))
-        scroll.bounces = true
-        return scroll
+            height: scrollView.getHeightFromDisplay(displayHeight: view.frame.size.height))
+        scrollView.bounces = true
+        return scrollView
     }()
    
     private lazy var locationLabel: UILabel = {
@@ -82,11 +89,34 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         stackView.distribution  = UIStackView.Distribution.fill
         stackView.alignment = UIStackView.Alignment.center
         stackView.spacing = 5
-        
-        //stackView.backgroundColor = .green
-        //stackView.setCustomSpacing(view.frame.height / 20, after: weatherFeelsLike)
-        //stackView.setCustomSpacing(view.frame.height / 20, after: collectionView)
         return stackView
+    }()
+    
+    private lazy var stackViewForLogo: UIStackView = {
+        var stackView = UIStackView()
+        stackView = UIStackView(arrangedSubviews: [
+            openWeatherLabel,
+            openWeatherLogo
+        ])
+        stackView.axis  = NSLayoutConstraint.Axis.vertical
+        stackView.distribution  = UIStackView.Distribution.fillEqually
+        stackView.alignment = UIStackView.Alignment.center
+        return stackView
+    }()
+    
+    private lazy var openWeatherLogo: UIImageView = {
+       let openWeatherLogo = UIImageView()
+        openWeatherLogo.image = UIImage(named: "logo")
+        openWeatherLogo.contentMode = .scaleAspectFit
+        return openWeatherLogo
+    }()
+    
+    private lazy var openWeatherLabel: UILabel = {
+        let openWeatherLabel = UILabel()
+        openWeatherLabel.text = "Powered by OpenWeatherMap.org"
+        openWeatherLabel.textColor = .white
+        openWeatherLabel.drawLabel(fontSize: 15, weight: .light)
+        return openWeatherLabel
     }()
     
     override func viewDidLoad() {
@@ -96,6 +126,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         setupNavigationBar()
         scrollView.addSubview(collectionView)
         scrollView.addSubview(tableView)
+        scrollView.addSubview(stackViewForLogo)
         setupSubviews(stackView, scrollView)
         setConstraits()
     }
@@ -104,10 +135,10 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillAppear(animated)
         //setupNavigationBar()
     }
-    
+        
         private func setupNavigationBar() {
             
-            rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(updateLabels))
+            rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
             leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(updateLabels))
             //title = "Task List"
             //navigationController?.navigationBar.prefersLargeTitles = false
@@ -144,11 +175,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        stackViewForLogo.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         
         NSLayoutConstraint.activate([
 
-            
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: 40),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
@@ -166,8 +198,18 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             
             collectionView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             collectionView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            collectionView.heightAnchor.constraint(equalTo: tableView.heightAnchor, multiplier: 1/3)
+            collectionView.heightAnchor.constraint(equalTo: tableView.heightAnchor, multiplier: 1/4),
+            
+            stackViewForLogo.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 5),
+            stackViewForLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackViewForLogo.widthAnchor.constraint(equalTo: tableView.widthAnchor),
+            stackViewForLogo.heightAnchor.constraint(equalToConstant: 60)
         ])
+    }
+    
+    @objc private func moveToSettingsVC() {
+        let settingsVC = SettingsViewController()
+        self.navigationController?.pushViewController(settingsVC, animated: true)
     }
     
    @objc private func updateLabels() {
@@ -176,7 +218,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
         weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
         weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
-        print(weatherForecastData?.current.weather[0].id ?? "no id")
+        //print(weatherForecastData?.current.weather[0].id ?? "no id")
         assignbackground()
     }
     
@@ -198,7 +240,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     
-    private func startLocationManager() {
+    @objc private func startLocationManager() {
         locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
@@ -224,6 +266,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             self.tableView.reloadData()
             self.collectionView.reloadData()
         }
+        refreshControl.endRefreshing()
+        
         print(urlForecastDaily)
         print(urlCurrentWeather)
         print("latitude: " + latitude.description)
@@ -244,17 +288,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     private func rightBarButtonItem(iconNameButton: String, selector: Selector) {
         let button = UIButton()
         button.frame = CGRect(x: -20, y: 0, width: 50, height: 50)
-        //button.backgroundColor = .orange
         button.setImage(UIImage(systemName: iconNameButton), for: .normal)
         button.addTarget(self, action: selector, for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFit
-        //button.backgroundColor = .orange
         
         let buttonBarButton = UIBarButtonItem(customView: button)
-        //let buttonBarButton = UIBarButtonItem(customView: UIView(frame: CGRect(x: -20, y: -20, width: 30, height: 30)))
-        //buttonBarButton.customView?.addSubview(button)
-        //buttonBarButton.customView?.frame = button.frame
-
         self.navigationItem.rightBarButtonItem = buttonBarButton
     }
     
@@ -279,7 +317,8 @@ extension MainViewController: CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
             updateWeatherInfo(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
             //get location name
-            geocoder.reverseGeocodeLocation(lastLocation, preferredLocale: Locale.init(identifier: "ru_RU")) { placemarks, error in
+//            geocoder.reverseGeocodeLocation(lastLocation, preferredLocale: Locale.init(identifier: "ru_RU")) { placemarks, error in
+            geocoder.reverseGeocodeLocation(lastLocation) { placemarks, error in
                 let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
                 self.locationName = locality
             }
@@ -306,7 +345,6 @@ extension MainViewController {
                 print("back")
             }
         } else {
-            startLocationManager()
             print("update")
             }
         }

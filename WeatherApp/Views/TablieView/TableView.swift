@@ -36,6 +36,10 @@ class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
         weatherData?.daily.count ?? 1
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        50
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // Configure the Table
@@ -51,7 +55,8 @@ class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
         cell.weatherDay.text = indexPath.row != 0 ? convertDateToString(unixDate: weatherData?.daily[indexPath.row].dt ?? 0, dateFormat:"E, d.MM") : "Сегодня"
         cell.weatherTempMinMax.text = checkTemp(weatherData?.daily[indexPath.row].temp.min ?? 0) +
         "..." + checkTemp(weatherData?.daily[indexPath.row].temp.max ?? 0)
-        cell.weatherImage.image = UIImage(named: weatherData?.daily[indexPath.row].weather[0].icon ?? "default")
+        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")
+        
         return cell
     }
     
