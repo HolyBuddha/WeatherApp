@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TableViewHeader: UITableViewHeaderFooterView {
+class MainTableViewHeader: UITableViewHeaderFooterView {
 
     static let reuseID = "TableViewHeader"
     

@@ -7,9 +7,9 @@
 
 import UIKit
 
-class TableViewCell: UITableViewCell {
+class MainTableViewCell: UITableViewCell {
     
-    static let reuseID = "TableViewCell"
+    static let reuseID = "MainTableViewCell"
     
     // Create UIViews
     lazy var stackViewCell = UIStackView()

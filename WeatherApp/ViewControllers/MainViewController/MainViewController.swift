@@ -10,18 +10,21 @@ import CoreLocation
 
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
+    private let settingsVC = SettingsViewController()
+    private let locationsVC = LocationsViewController()
     private let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
     private var locationName = ""
     
-    private var weatherForecastData: WeatherForecastData?
+    private var weatherForecastDataMetric: WeatherForecastData?
+    private var weatherForecastDataImperial: WeatherForecastData?
     private var weatherCurrentData: WeatherCurrentData?
     
     private let coordinates = CLLocation()
-    private let url = WeatherApi()
+    //private let url = WeatherApi()
     
-    private lazy var tableView = TableView()
-    private lazy var collectionView = CollectionView()
+    private lazy var tableView = MainTableView()
+    private lazy var collectionView = MainCollectionView()
     
     private lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -122,7 +125,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        startLocationManager()
+        
         setupNavigationBar()
         scrollView.addSubview(collectionView)
         scrollView.addSubview(tableView)
@@ -133,13 +136,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //setupNavigationBar()
+        startLocationManager()
     }
         
         private func setupNavigationBar() {
             
             rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
-            leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(updateLabels))
+            leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(moveToLocationsVC))
             //title = "Task List"
             //navigationController?.navigationBar.prefersLargeTitles = false
     
@@ -208,17 +211,20 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc private func moveToSettingsVC() {
-        let settingsVC = SettingsViewController()
         self.navigationController?.pushViewController(settingsVC, animated: true)
     }
     
-   @objc private func updateLabels() {
+    @objc private func moveToLocationsVC() {
+        self.navigationController?.pushViewController(locationsVC, animated: true)
+    }
+    
+   private func updateLabels() {
         locationLabel.text = locationName
         //locationLabel.text = weatherCurrentData?.name ?? "ERROR"
-        tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
-        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
-        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
-        //print(weatherForecastData?.current.weather[0].id ?? "no id")
+        tempLabel.text = checkTemp(weatherForecastDataMetric?.current.temp ?? 0)
+        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastDataMetric?.current.weather[0].id ?? 200]
+        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastDataMetric?.current.feelsLike ?? 0)
+        
         assignbackground()
     }
     
@@ -234,13 +240,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private func assignbackground() {
         let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
+        backgroundImage.image = updateBackgroundImage(id: weatherForecastDataMetric?.current.weather[0].id ?? 200)
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
     }
     
     
-    @objc private func startLocationManager() {
+    @objc func startLocationManager() {
         locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
@@ -251,25 +257,39 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func updateWeatherInfo(latitude: Double, longitude: Double) {
-        let urlForecastDaily = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
-        let urlCurrentWeather = url.apiForCurrentWeather(latitude: latitude, longitude: longitude)
+     private func updateWeatherInfo(latitude: Double, longitude: Double) {
+//        let urlForecastDailyMetric = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
+        //let urlForecastDaiyImperial = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .imperial)
+         let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: latitude, longitude: longitude)
+        //let urlCurrentWeather = url.apiForCurrentWeather(latitude: latitude, longitude: longitude)
         
-        NetworkManager.shared.fetchData(from: urlCurrentWeather) { (weatherData: WeatherCurrentData) in
-            self.weatherCurrentData = weatherData
-        }
+//        NetworkManager.shared.fetchData(from: urlCurrentWeather) { (weatherData: WeatherCurrentData) in
+//            self.weatherCurrentData = weatherData
+//        }
+        if settingsVC.segmentForTemperature.selectedSegmentIndex == 0 {
         NetworkManager.shared.fetchData(from: urlForecastDaily) { (weatherData: WeatherForecastData) in
-            self.weatherForecastData = weatherData
+            self.weatherForecastDataMetric = weatherData
             self.tableView.setData(weatherData: weatherData)
             self.collectionView.setData(weatherData: weatherData)
             self.updateLabels()
             self.tableView.reloadData()
             self.collectionView.reloadData()
+            print(self.weatherForecastDataMetric?.current.weather[0].id ?? "no id")
+        }
+        } else {
+        NetworkManager.shared.fetchData(from: urlForecastDaily) { (weatherData: WeatherForecastData) in
+            self.weatherForecastDataImperial = weatherData
+            self.tableView.setData(weatherData: weatherData)
+            self.collectionView.setData(weatherData: weatherData)
+            self.updateLabels()
+            self.tableView.reloadData()
+            self.collectionView.reloadData()
+            print("I have data")
+        }
         }
         refreshControl.endRefreshing()
         
-        print(urlForecastDaily)
-        print(urlCurrentWeather)
+         print(weatherForecastDataImperial?.current.weather[0].id ?? "no imperial")
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
     }
@@ -337,18 +357,15 @@ extension MainViewController {
                 self.tempLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
                 self.stackView.spacing = 0
             }
-        } else if scrollView.contentOffset.y < 20 && scrollView.contentOffset.y > -200 {
+        } else {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
                 self.stackView.spacing = 5
                 self.updateLabels()
                 self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
-                print("back")
-            }
-        } else {
-            print("update")
             }
         }
         //print(scrollView.contentOffset.y)
     }
+}
 
 

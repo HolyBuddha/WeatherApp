@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HeaderCollectionReusableView: UICollectionReusableView {
+class MainHeaderCollectionReusableView: UICollectionReusableView {
     
     static let reuseId = "HeaderCollectionReusableView"
     

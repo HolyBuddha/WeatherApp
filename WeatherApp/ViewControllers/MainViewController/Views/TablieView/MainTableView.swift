@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
+class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
     
     private var weatherData: WeatherForecastData?
    
@@ -17,8 +17,8 @@ class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
         
         //Configure TableView
         
-        register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.reuseID)
-        register(TableViewHeader.self, forHeaderFooterViewReuseIdentifier: TableViewHeader.reuseID)
+        register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reuseID)
+        register(MainTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MainTableViewHeader.reuseID)
         dataSource = self
         delegate = self
         isScrollEnabled = false
@@ -50,18 +50,19 @@ class TableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
         tableView.separatorColor = UIColor(white: 1, alpha: 0.5)
         
         // Configure the Cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.reuseID, for: indexPath) as! TableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reuseID, for: indexPath) as! MainTableViewCell
+        cell.selectionStyle = .none
         cell.backgroundColor = UIColor.clear
         cell.weatherDay.text = indexPath.row != 0 ? convertDateToString(unixDate: weatherData?.daily[indexPath.row].dt ?? 0, dateFormat:"E, d.MM") : "Сегодня"
         cell.weatherTempMinMax.text = checkTemp(weatherData?.daily[indexPath.row].temp.min ?? 0) +
         "..." + checkTemp(weatherData?.daily[indexPath.row].temp.max ?? 0)
-        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")
+        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TableViewHeader.reuseID)
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MainTableViewHeader.reuseID)
         return header
     }
     

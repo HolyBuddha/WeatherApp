@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension TableView {
+extension MainTableView {
     
     func convertDateToString(unixDate: Double, dateFormat: String) -> String {
         

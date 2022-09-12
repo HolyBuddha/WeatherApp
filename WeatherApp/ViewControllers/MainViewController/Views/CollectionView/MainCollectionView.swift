@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource,
+class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource,
                       UICollectionViewDelegateFlowLayout  {
     
     private var weatherData : WeatherForecastData?
@@ -26,10 +26,10 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
         
         delegate = self
         dataSource = self
-        register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.reuseId)
-        register(HeaderCollectionReusableView.self,
+        register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.reuseId)
+        register(MainHeaderCollectionReusableView.self,
                  forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                 withReuseIdentifier: HeaderCollectionReusableView.reuseId)
+                 withReuseIdentifier: MainHeaderCollectionReusableView.reuseId)
         
         backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         layer.cornerRadius = 20
@@ -48,11 +48,11 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dequeueReusableCell(withReuseIdentifier: CollectionViewCell.reuseId, for: indexPath) as! CollectionViewCell
+        let cell = dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.reuseId, for: indexPath) as! MainCollectionViewCell
         
         
         cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
-        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")
+        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
         cell.tempLabel.text = checkTemp(weatherData?.hourly[indexPath.row].temp ?? 0)
         return cell
     }
@@ -61,8 +61,8 @@ class CollectionView: UICollectionView, UICollectionViewDelegate, UICollectionVi
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: HeaderCollectionReusableView.reuseId,
-            for: indexPath) as! HeaderCollectionReusableView
+            withReuseIdentifier: MainHeaderCollectionReusableView.reuseId,
+            for: indexPath) as! MainHeaderCollectionReusableView
         header.humidityLabel.text = String(Int(weatherData?.current.humidity ?? 0)) + "%"
         header.windSpeedLabel.text = String(Int(weatherData?.current.windSpeed ?? 0)) + " м/с"
         header.pressureLabel.text = String(Int(weatherData?.current.pressure ?? 0)) + " мм"

@@ -7,9 +7,9 @@
 
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+class MainCollectionViewCell: UICollectionViewCell {
     
-    static let reuseId = "CollectionViewCell"
+    static let reuseId = "MainCollectionViewCell"
     
     // Create UIViews
     lazy var stackView = UIStackView()

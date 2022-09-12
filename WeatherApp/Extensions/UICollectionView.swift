@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension CollectionView {
+extension MainCollectionView {
     
     func convertDateToString(unixDate: Double, dateFormat: String) -> String {
         
