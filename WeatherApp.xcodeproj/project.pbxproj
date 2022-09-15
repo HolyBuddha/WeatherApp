@@ -106,7 +106,6 @@
 			children = (
 				12981CC0288582B70032F16F /* WeatherForecastData.swift */,
 				12C8DAC728B405AB00D515DD /* WeatherCurrentData.swift */,
-				1276C498289487A000986039 /* WeatherApi.swift */,
 				124414432894137B002429EF /* WeatherConditions.swift */,
 				12358EEA28CA15D500D054BE /* WeatherImages.swift */,
 			);
@@ -190,6 +189,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		12E63C0A28CF2F7F007E5F4F /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				1276C498289487A000986039 /* WeatherApi.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		12EB866D289939AF002F31FD /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -232,6 +239,7 @@
 				12C8DAC428B4025800D515DD /* ViewControllers */,
 				12F6B7D62885926F00CCA40E /* Services */,
 				12C8DACA28B4CEE200D515DD /* Source */,
+				12E63C0A28CF2F7F007E5F4F /* Constants */,
 				12DF325328A5B3D700E2EE6C /* Extensions */,
 			);
 			path = WeatherApp;

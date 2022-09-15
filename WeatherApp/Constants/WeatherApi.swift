@@ -23,10 +23,6 @@ class WeatherApi {
             "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&appid=edfe94b1ee9b1f9ceecd7596d2f66b06&units=\(units)&lang=ru&exclude=alerts,minutely"
         }
     
-//    func apiForecastDaily(latitude: Double, longitude: Double, units: Units) -> String {
-//        "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&appid=edfe94b1ee9b1f9ceecd7596d2f66b06&units=\(units)&lang=ru&exclude=alerts,minutely"
-//    }
-    
     enum Units: String {
         case metric = "metric"
         case imperial = "imperial"

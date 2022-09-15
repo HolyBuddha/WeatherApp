@@ -15,13 +15,10 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     private let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
     private var locationName = ""
+    private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
     
-    private var weatherForecastDataMetric: WeatherForecastData?
-    private var weatherForecastDataImperial: WeatherForecastData?
+    private var weatherForecastData: WeatherForecastData?
     private var weatherCurrentData: WeatherCurrentData?
-    
-    private let coordinates = CLLocation()
-    //private let url = WeatherApi()
     
     private lazy var tableView = MainTableView()
     private lazy var collectionView = MainCollectionView()
@@ -45,7 +42,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         scrollView.bounces = true
         return scrollView
     }()
-   
+    
     private lazy var locationLabel: UILabel = {
         let locationLabel = UILabel()
         locationLabel.drawLabel(fontSize: 40, weight: .medium)
@@ -108,7 +105,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     private lazy var openWeatherLogo: UIImageView = {
-       let openWeatherLogo = UIImageView()
+        let openWeatherLogo = UIImageView()
         openWeatherLogo.image = UIImage(named: "logo")
         openWeatherLogo.contentMode = .scaleAspectFit
         return openWeatherLogo
@@ -124,49 +121,32 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         setupNavigationBar()
         scrollView.addSubview(collectionView)
         scrollView.addSubview(tableView)
         scrollView.addSubview(stackViewForLogo)
         setupSubviews(stackView, scrollView)
         setConstraits()
+        assignbackground()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startLocationManager()
     }
+    
+    private func setupNavigationBar() {
         
-        private func setupNavigationBar() {
-            
-            rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
-            leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(moveToLocationsVC))
-            //title = "Task List"
-            //navigationController?.navigationBar.prefersLargeTitles = false
-    
-            //let navBarAppearance = UINavigationBarAppearance()
-    
-//            navBarAppearance.backgroundColor = .clear
-//            navBarAppearance.configureWithOpaqueBackground()
-//            navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.blue]
-//            navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.blue]
-    
-//            navigationItem.rightBarButtonItem = UIBarButtonItem(
-//                barButtonSystemItem: .edit,
-//                target: self,
-//                action: #selector(updateLabels)
-//            )
-            //navigationItem.rightBarButtonItem?.image = UIImage(systemName: "pencil")
-            navigationController?.view.backgroundColor = .clear
-            navigationController?.navigationBar.tintColor = .white
-//            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-//            navigationController?.navigationBar.shadowImage = UIImage()
-//            navigationController?.navigationBar.isTranslucent = true
-            //navigationController?.navigationBar.standardAppearance = navBarAppearance
-            //navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
-        }
+        rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
+        leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(moveToLocationsVC))
+        
+        self.title = locationName
+        navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.view.backgroundColor = .clear
+        navigationController?.navigationBar.tintColor = .white
+    }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in
@@ -183,7 +163,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         
         
         NSLayoutConstraint.activate([
-
+            
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: 40),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
@@ -218,14 +198,14 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.pushViewController(locationsVC, animated: true)
     }
     
-   private func updateLabels() {
+    private func updateLabels() {
         locationLabel.text = locationName
         //locationLabel.text = weatherCurrentData?.name ?? "ERROR"
-        tempLabel.text = checkTemp(weatherForecastDataMetric?.current.temp ?? 0)
-        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastDataMetric?.current.weather[0].id ?? 200]
-        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastDataMetric?.current.feelsLike ?? 0)
+        tempLabel.text = checkTemp(weatherForecastData?.current.temp ?? 0)
+        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
+        weatherFeelsLike.text = "Ощущается как: " + checkTemp(weatherForecastData?.current.feelsLike ?? 0)
+        backgroundImage.image = updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
         
-        assignbackground()
     }
     
     private func checkTemp(_ temp: Double) -> String {
@@ -239,8 +219,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func assignbackground() {
-        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
-        backgroundImage.image = updateBackgroundImage(id: weatherForecastDataMetric?.current.weather[0].id ?? 200)
         backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
         self.view.insertSubview(backgroundImage, at: 0)
     }
@@ -257,39 +235,33 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-     private func updateWeatherInfo(latitude: Double, longitude: Double) {
-//        let urlForecastDailyMetric = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
+    private func updateWeatherInfo(latitude: Double, longitude: Double) {
+        //        let urlForecastDailyMetric = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .metric)
         //let urlForecastDaiyImperial = url.apiForecastDaily(latitude: latitude, longitude: longitude, units: .imperial)
-         let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: latitude, longitude: longitude)
+        let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: latitude, longitude: longitude)
         //let urlCurrentWeather = url.apiForCurrentWeather(latitude: latitude, longitude: longitude)
         
-//        NetworkManager.shared.fetchData(from: urlCurrentWeather) { (weatherData: WeatherCurrentData) in
-//            self.weatherCurrentData = weatherData
-//        }
-        if settingsVC.segmentForTemperature.selectedSegmentIndex == 0 {
-        NetworkManager.shared.fetchData(from: urlForecastDaily) { (weatherData: WeatherForecastData) in
-            self.weatherForecastDataMetric = weatherData
-            self.tableView.setData(weatherData: weatherData)
-            self.collectionView.setData(weatherData: weatherData)
-            self.updateLabels()
-            self.tableView.reloadData()
-            self.collectionView.reloadData()
-            print(self.weatherForecastDataMetric?.current.weather[0].id ?? "no id")
+//                NetworkManager.shared.fetchData(from: urlCurrentWeather) { (weatherData: WeatherCurrentData) in
+//                    self.weatherCurrentData = weatherData
+//                }
+        NetworkManager.shared.fetchData(from: urlForecastDaily) { (result: Result<WeatherForecastData, Error>) in
+            switch result {
+            case .success(let weatherData):
+                    self.weatherForecastData = weatherData
+                    self.tableView.setData(weatherData: weatherData)
+                    self.collectionView.setData(weatherData: weatherData)
+                    self.updateLabels()
+                    self.tableView.reloadData()
+                    self.collectionView.reloadData()
+                    print(self.weatherForecastData?.current.weather[0].id ?? "no id")
+            case .failure(let error): print(error.localizedDescription)
+            }
+            
         }
-        } else {
-        NetworkManager.shared.fetchData(from: urlForecastDaily) { (weatherData: WeatherForecastData) in
-            self.weatherForecastDataImperial = weatherData
-            self.tableView.setData(weatherData: weatherData)
-            self.collectionView.setData(weatherData: weatherData)
-            self.updateLabels()
-            self.tableView.reloadData()
-            self.collectionView.reloadData()
-            print("I have data")
-        }
-        }
+        
         refreshControl.endRefreshing()
         
-         print(weatherForecastDataImperial?.current.weather[0].id ?? "no imperial")
+        //print(weatherForecastDataImperial?.current.weather[0].id ?? "no imperial")
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
     }
@@ -332,23 +304,26 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
 extension MainViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        //get coordinates
+       
         if let lastLocation = locations.last {
-            locationManager.stopUpdatingLocation()
             updateWeatherInfo(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude)
             //get location name
-//            geocoder.reverseGeocodeLocation(lastLocation, preferredLocale: Locale.init(identifier: "ru_RU")) { placemarks, error in
+            //            geocoder.reverseGeocodeLocation(lastLocation, preferredLocale: Locale.init(identifier: "ru_RU")) { placemarks, error in
             geocoder.reverseGeocodeLocation(lastLocation) { placemarks, error in
                 let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
                 self.locationName = locality
             }
         }
-        
+        locationManager.stopUpdatingLocation()
     }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+            print("Failed \(error)")
+        }
 }
+
 extension MainViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
         
         if scrollView.contentOffset.y > 20 {
             
@@ -364,7 +339,6 @@ extension MainViewController {
                 self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
             }
         }
-        //print(scrollView.contentOffset.y)
     }
 }
 
