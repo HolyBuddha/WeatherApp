@@ -21,10 +21,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-//        layer.cornerRadius = 20
-//        layer.borderColor = CGColor(gray: 1, alpha: 0.5)
-//        layer.borderWidth = 1
-        
         // StackView Properties
         stackView.axis  = NSLayoutConstraint.Axis.vertical
         stackView.alignment = .center

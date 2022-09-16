@@ -12,16 +12,16 @@ class MainHeaderCollectionReusableView: UICollectionReusableView {
     static let reuseId = "HeaderCollectionReusableView"
     
     // Create UIViews
-    lazy var windImage = UIImageView()
-    lazy var pressureImage = UIImageView()
-    lazy var humidityImage = UIImageView()
+    private lazy var windImage = UIImageView()
+    private lazy var pressureImage = UIImageView()
+    private lazy var humidityImage = UIImageView()
     
     lazy var windSpeedLabel = UILabel()
     lazy var pressureLabel = UILabel()
     lazy var humidityLabel = UILabel()
     
-    lazy var labelsStackView = UIStackView()
-    lazy var imagesStackView = UIStackView()
+    private lazy var labelsStackView = UIStackView()
+    private lazy var imagesStackView = UIStackView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

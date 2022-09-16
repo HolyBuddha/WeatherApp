@@ -8,31 +8,42 @@
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject {
+protocol LocationManagerProtocol: AnyObject {
+    func newLocationReceived(location: CLLocation)
+}
 
+class LocationService: NSObject {
+    
     private let locationManager = CLLocationManager()
     private var currentCoordinate: CLLocation?
     
-    func startLocationManager() {
-   
+    weak var delegate: LocationManagerProtocol?
+    
+    @objc func startLocationManager() {
+        
         locationManager.requestWhenInUseAuthorization()
         
         if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
             locationManager.pausesLocationUpdatesAutomatically = true
             locationManager.startUpdatingLocation()
         }
-        
     }
 }
+
+
+extension LocationService: CLLocationManagerDelegate {
     
-    
-extension LocationManager: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation], completion: (_ lat: String, _ lng: String) -> Void) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lastLocation = locations.last {
-            let latitude = String(lastLocation.coordinate.latitude)
-            let longitude = String(lastLocation.coordinate.longitude)
-            completion(latitude, longitude)
+            delegate?.newLocationReceived(location: lastLocation)
+            print("loading location")
         }
+        locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed find location")
     }
 }

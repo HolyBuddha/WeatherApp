@@ -24,8 +24,8 @@ class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         translatesAutoresizingMaskIntoConstraints = false
         
         
-        delegate = self
-        dataSource = self
+        self.delegate = self
+        self.dataSource = self
         register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.reuseId)
         register(MainHeaderCollectionReusableView.self,
                  forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,

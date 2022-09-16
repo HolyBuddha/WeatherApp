@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
-    private lazy var mainVC = MainViewController()
+    var onClose: ((TemperatureType) -> Void)?
     
     private lazy var stackViewForTemp: UIStackView = {
         var stackView = UIStackView()
@@ -100,8 +100,17 @@ class SettingsViewController: UIViewController {
         setupNavigationBar()
         setupSubviews(stackViewForTemp, stackViewForWindSpeed)
         setConstraits()
+        view.backgroundColor = .black
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if segmentForTemperature.selectedSegmentIndex == 0 {
+            onClose?(.celsius)
+        } else {
+            onClose?(.fahrenheit)
+        }
+    }
     
     private func setupSubviews(_ subviews: UIView...) {
         subviews.forEach { subview in

@@ -27,5 +27,5 @@ class WeatherApi {
         case metric = "metric"
         case imperial = "imperial"
     }
-    
 }
+
