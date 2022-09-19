@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct weatherConditions {
+struct WeatherConditions {
     static let weatherIDs: [Int: String] = [
         200: "Гроза с небольшим дождем",
         201: "Гроза с дождем",

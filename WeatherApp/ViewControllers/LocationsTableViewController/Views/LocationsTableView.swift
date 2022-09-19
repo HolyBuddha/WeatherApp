@@ -49,8 +49,11 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         tableView.separatorColor = UIColor(white: 1, alpha: 0.5)
         
         // Configure the Cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: LocationsTableViewCell.reuseID, for: indexPath) as! LocationsTableViewCell
-       
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: LocationsTableViewCell.reuseID,
+            for: indexPath) as? LocationsTableViewCell else {
+            fatalError("DequeueReusableCell failed while casting")
+        }
         
         return cell
     }
@@ -60,5 +63,3 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
     }
     
 }
-
-

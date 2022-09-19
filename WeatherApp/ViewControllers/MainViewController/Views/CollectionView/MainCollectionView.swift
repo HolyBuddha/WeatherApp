@@ -7,10 +7,9 @@
 
 import UIKit
 
-class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource,
-                      UICollectionViewDelegateFlowLayout  {
+class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    private var weatherData : WeatherForecastData?
+    private var weatherData: WeatherForecastData?
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -22,7 +21,6 @@ class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         translatesAutoresizingMaskIntoConstraints = false
-        
         
         self.delegate = self
         self.dataSource = self
@@ -48,11 +46,16 @@ class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.reuseId, for: indexPath) as! MainCollectionViewCell
-        
+        guard let cell = dequeueReusableCell(
+            withReuseIdentifier: MainCollectionViewCell.reuseId,
+            for: indexPath
+        ) as? MainCollectionViewCell else {
+            fatalError("DequeueReusableCell failed while casting")
+        }
         
         cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
-        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
+        cell.weatherImage.image = UIImage(
+            systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
         cell.tempLabel.text = checkTemp(weatherData?.hourly[indexPath.row].temp ?? 0)
         return cell
     }
@@ -60,15 +63,22 @@ class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         CGSize(width: frame.width / 6, height: frame.height)
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+        guard let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: MainHeaderCollectionReusableView.reuseId,
-            for: indexPath) as! MainHeaderCollectionReusableView
+            for: indexPath) as? MainHeaderCollectionReusableView else {
+            fatalError("DequeueReusableCell failed while casting")
+        }
         header.humidityLabel.text = String(Int(weatherData?.current.humidity ?? 0)) + "%"
         header.windSpeedLabel.text = String(Int(weatherData?.current.windSpeed ?? 0)) + " м/с"
         header.pressureLabel.text = String(Int(weatherData?.current.pressure ?? 0)) + " мм"
         return header
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
         CGSize(width: frame.width / 4, height: frame.height)
     }
     
@@ -76,6 +86,3 @@ class MainCollectionView: UICollectionView, UICollectionViewDelegate, UICollecti
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-
-

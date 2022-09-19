@@ -1,0 +1,13 @@
+disabled_rules:
+- trailing_whitespace
+- identifier_name
+- comment_spacing
+
+line_length:
+  warning: 150
+  error: 250
+  ignores_comments: true
+
+type_body_length:
+  warning: 300
+  error: 400

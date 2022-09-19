@@ -53,7 +53,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private lazy var locationLabel: UILabel = {
         let locationLabel = UILabel()
-        locationLabel.drawLabel(fontSize: 30, weight: .medium)
+        locationLabel.drawLabel(fontSize: 35, weight: .medium)
         locationLabel.drawShadow()
         return locationLabel
     }()
@@ -139,8 +139,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         setupSubviews(stackView, scrollView)
         setConstraits()
         assignbackground()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -169,14 +167,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         stackViewForLogo.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
-        
         NSLayoutConstraint.activate([
             
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor, constant: 40),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
-            
             
             scrollView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
             scrollView.heightAnchor.constraint(equalTo: view.heightAnchor),
@@ -207,7 +203,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.pushViewController(settingsVC, animated: true)
     }
     
-    
     @objc private func moveToLocationsVC() {
         let locationsVC = LocationsViewController()
         self.navigationController?.pushViewController(locationsVC, animated: true)
@@ -215,13 +210,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     private func updateLabels() {
         locationLabel.text = locationName
-       
         //locationLabel.text = weatherCurrentData?.name ?? "ERROR"
         tempLabel.text = Double(weatherForecastData?.current.temp ?? 0).temperatureValue
-        weatherDescriptionLabel.text = weatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
+        weatherDescriptionLabel.text = WeatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
         weatherFeelsLike.text = "Ощущается как: " + (weatherForecastData?.current.feelsLike ?? 0).temperatureValue
         backgroundImage.image = updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
-        
     }
     
     private func assignbackground() {
@@ -248,20 +241,17 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             }
             
         }
-        
         refreshControl.endRefreshing()
-        
-        //print(weatherForecastDataImperial?.current.weather[0].id ?? "no imperial")
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
     }
     
     private func updateBackgroundImage(id: Int) -> UIImage {
         switch id {
-        case 800 : return UIImage(#imageLiteral(resourceName: "cleanSky"))
+        case 800: return UIImage(#imageLiteral(resourceName: "cleanSky"))
         case 801...802: return UIImage(#imageLiteral(resourceName: "littleCloudy"))
-        case 803...804 : return UIImage(#imageLiteral(resourceName: "darkCloudy"))
-        case ...232 : return UIImage(#imageLiteral(resourceName: "storm"))
+        case 803...804: return UIImage(#imageLiteral(resourceName: "darkCloudy"))
+        case ...232: return UIImage(#imageLiteral(resourceName: "storm"))
         default:
             return UIImage(#imageLiteral(resourceName: "rainy"))
         }
@@ -273,7 +263,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         button.setImage(UIImage(systemName: iconNameButton), for: .normal)
         button.addTarget(self, action: selector, for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFit
-        
         let buttonBarButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = buttonBarButton
     }
@@ -303,23 +292,20 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
             }
         }
 }
-//    func statusBarColorChange(){
-//
-//        if #available(iOS 13, *)
-//              {
-//                  let statusBar = UIView(frame: (UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame)!)
-//            statusBar.backgroundColor = UIColor(white: 1, alpha: 0.8)
-//                  UIApplication.shared.keyWindow?.addSubview(statusBar)
-//            UIApplication.shared.statusBarStyle = .darkContent
-//              } else {
-//                 // ADD THE STATUS BAR AND SET A CUSTOM COLOR
-//                 let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
-//                 if statusBar.responds(to:#selector(setter: UIView.backgroundColor)) {
-//                    statusBar.backgroundColor = #colorLiteral(red: 0.2346, green: 0.3456, blue: 0.5677, alpha: 1)
-//                 }
-//                 UIApplication.shared.statusBarStyle = .darkContent
-//              }
-//        }
+    func statusBarColorChange(scrollUp: Bool) {
+        if scrollUp {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = UIColor(white: 1, alpha: 0.8)
+            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+            self.navigationController?.navigationBar.tintColor = .black
+        } else {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithTransparentBackground()
+            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+           self.navigationController?.navigationBar.tintColor = .white
+        }
+        }
     }
 
 extension MainViewController {
@@ -331,22 +317,15 @@ extension MainViewController {
                 self.weatherFeelsLike.text = ""
                 self.tempLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
                 self.stackView.spacing = 0
-                self.locationLabel.text = ""
-                self.title = self.locationName
-                self.navigationController?.navigationBar.backgroundColor = UIColor(white: 1, alpha: 0.8)
-                self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
-                self.navigationController?.navigationBar.tintColor = .black
-                //self.statusBarColorChange()
+                self.locationLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
             }
         } else {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
-                self.title = ""
-               
+                //self.statusBarColorChange(scrollUp: false)
                 self.stackView.spacing = 5
                 self.updateLabels()
                 self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
-                self.navigationController?.navigationBar.backgroundColor = .clear
-                self.navigationController?.navigationBar.tintColor = .white
+                self.locationLabel.font = UIFont.systemFont(ofSize: 35, weight: .medium)
             }
         }
     }
@@ -357,7 +336,7 @@ extension MainViewController: LocationManagerProtocol {
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
         updateWeatherInfo(latitude: latitude ?? 0, longitude: longitude ?? 0)
-        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { placemarks, error in
+        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { placemarks, _ in
             let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
             self.locationName = locality
     }

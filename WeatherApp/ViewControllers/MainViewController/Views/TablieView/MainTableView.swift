@@ -7,10 +7,10 @@
 
 import UIKit
 
-class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
+class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
     
     private var weatherData: WeatherForecastData?
-   
+    
     init() {
         
         super.init(frame: .zero, style: .plain)
@@ -50,10 +50,14 @@ class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
         tableView.separatorColor = UIColor(white: 1, alpha: 0.5)
         
         // Configure the Cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.reuseID, for: indexPath) as! MainTableViewCell
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: MainTableViewCell.reuseID,
+            for: indexPath) as? MainTableViewCell else {
+            fatalError("DequeueReusableCell failed while casting")
+        }
         cell.selectionStyle = .none
         cell.backgroundColor = UIColor.clear
-        cell.weatherDay.text = indexPath.row != 0 ? convertDateToString(unixDate: weatherData?.daily[indexPath.row].dt ?? 0, dateFormat:"E, d.MM") : "Сегодня"
+        cell.weatherDay.text = indexPath.row != 0 ? convertDateToString(unixDate: weatherData?.daily[indexPath.row].dt ?? 0, dateFormat: "E, d.MM") : "Сегодня"
         cell.weatherTempMinMax.text = checkTemp(weatherData?.daily[indexPath.row].temp.min ?? 0) +
         "..." + checkTemp(weatherData?.daily[indexPath.row].temp.max ?? 0)
         cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
@@ -71,4 +75,3 @@ class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate  {
     }
     
 }
-

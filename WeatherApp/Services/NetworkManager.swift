@@ -24,7 +24,7 @@ final class NetworkManager {
                     return
                 }
                 DispatchQueue.main.async {
-                    completion( Result{ try JSONDecoder().decode(T.self, from: data!) })
+                    completion( Result { try JSONDecoder().decode(T.self, from: data!) })
                 }
                 
             }.resume()

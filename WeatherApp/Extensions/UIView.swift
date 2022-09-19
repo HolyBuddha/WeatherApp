@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 extension UIView {
     func drawShadow() {
         layer.masksToBounds = false
@@ -21,11 +19,9 @@ extension UIView {
     
     func animateCloseWith(float: CGFloat) {
         UIView.animate(withDuration: 1, animations: { () -> Void in
-            self.frame.size.height = self.frame.size.height - float
-            self.alpha = CGFloat(Float(0.1)) //for the fade effect
+            self.frame.size.height -= float
+            self.alpha = CGFloat(Float(0.1))
                 })
             self.layoutIfNeeded()
     }
-    
-    
 }

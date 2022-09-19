@@ -14,6 +14,4 @@ extension UIImageView {
         tintColor = .white
         contentMode = .scaleAspectFit
     }
-    
-    
 }

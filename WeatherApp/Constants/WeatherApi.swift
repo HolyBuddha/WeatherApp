@@ -24,8 +24,7 @@ class WeatherApi {
         }
     
     enum Units: String {
-        case metric = "metric"
-        case imperial = "imperial"
+        case metric
+        case imperial
     }
 }
-

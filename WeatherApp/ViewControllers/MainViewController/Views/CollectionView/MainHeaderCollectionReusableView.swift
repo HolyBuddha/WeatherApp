@@ -26,9 +26,6 @@ class MainHeaderCollectionReusableView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        // Content Properties
-
-        
         // StackViews Properties
         labelsStackView.axis  = NSLayoutConstraint.Axis.vertical
         labelsStackView.alignment = .center
@@ -36,7 +33,6 @@ class MainHeaderCollectionReusableView: UICollectionReusableView {
         labelsStackView.spacing = 5
         labelsStackView.translatesAutoresizingMaskIntoConstraints = false
         labelsStackView.sizeToFit()
-     
         
         imagesStackView.axis  = NSLayoutConstraint.Axis.vertical
         imagesStackView.alignment = .center
@@ -67,7 +63,7 @@ class MainHeaderCollectionReusableView: UICollectionReusableView {
         addSubview(labelsStackView)
         addSubview(imagesStackView)
         
-        //Set the constraits
+        // Set the constraits
         NSLayoutConstraint.activate([
             imagesStackView.topAnchor.constraint(equalTo: topAnchor),
             imagesStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),

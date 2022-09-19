@@ -17,7 +17,6 @@ class LocationsTableViewCell: UITableViewCell {
         lazy var weatherImage = UIImageView()
         lazy var weatherTempMinMax = UILabel()
       
-        
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             
@@ -36,7 +35,6 @@ class LocationsTableViewCell: UITableViewCell {
             // weatherImage properties
             weatherImage.tintColor = .white
             weatherImage.contentMode = .scaleAspectFit
-            
             
             // Added the UI components
             stackViewCell.addArrangedSubview(weatherDay)
@@ -58,4 +56,3 @@ class LocationsTableViewCell: UITableViewCell {
             fatalError("init(coder:) has not been implemented")
         }
     }
-

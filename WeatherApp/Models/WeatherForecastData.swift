@@ -78,7 +78,3 @@ struct TempData: Decodable {
 struct FeelsLikeData: Decodable {
     let day: Double
 }
-
-
-
-

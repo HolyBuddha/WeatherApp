@@ -30,7 +30,7 @@ class MainTableViewHeader: UITableViewHeaderFooterView {
             headerOfTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             headerOfTableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -10),
             headerOfTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            headerOfTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            headerOfTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
@@ -38,4 +38,3 @@ class MainTableViewHeader: UITableViewHeaderFooterView {
         fatalError()
     }
 }
-

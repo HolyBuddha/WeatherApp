@@ -8,7 +8,7 @@
 import Foundation
 
 struct WeatherImages {
-    static let iconIDs: [String : String] = [
+    static let iconIDs: [String: String] = [
         "01d": "sun.max.fill",
         "01n": "moon.fill",
         "02d": "cloud.sun.fill",

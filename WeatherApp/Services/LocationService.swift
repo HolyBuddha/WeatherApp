@@ -32,7 +32,6 @@ class LocationService: NSObject {
     }
 }
 
-
 extension LocationService: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

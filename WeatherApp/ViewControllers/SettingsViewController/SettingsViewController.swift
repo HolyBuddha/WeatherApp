@@ -46,7 +46,6 @@ class SettingsViewController: UIViewController {
         return labelForWindSpeed
     }()
     
-    
     private lazy var labelForSwitchTemperature: UILabel = {
        let labelForSwitchTemperature = UILabel()
         labelForSwitchTemperature.text = "Температура"
@@ -57,7 +56,7 @@ class SettingsViewController: UIViewController {
     }()
     
     private lazy var segmentForWindSpeed: UISegmentedControl = {
-        let segmentForWindSpeed = UISegmentedControl(items: ["м/с" , "км/с"])
+        let segmentForWindSpeed = UISegmentedControl(items: ["м/с", "км/с"])
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         let titleTextAttributesSelected = [NSAttributedString.Key.foregroundColor: UIColor.black]
         segmentForWindSpeed.setTitleTextAttributes(titleTextAttributes, for: .normal)
@@ -70,13 +69,12 @@ class SettingsViewController: UIViewController {
         segmentForWindSpeed.addTarget(self, action: #selector(valueChanged(segmentedControl:)), for: .valueChanged)
         segmentForWindSpeed.selectedSegmentIndex = 0
         
-    
         return segmentForWindSpeed
     }()
     
     lazy var segmentForTemperature: UISegmentedControl = {
         
-        let segmentForTemperature = UISegmentedControl(items: ["C" , "F"])
+        let segmentForTemperature = UISegmentedControl(items: ["C", "F"])
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         let titleTextAttributesSelected = [NSAttributedString.Key.foregroundColor: UIColor.black]
         segmentForTemperature.setTitleTextAttributes(titleTextAttributes, for: .normal)
@@ -89,11 +87,8 @@ class SettingsViewController: UIViewController {
         segmentForTemperature.addTarget(self, action: #selector(valueChanged(segmentedControl:)), for: .valueChanged)
         segmentForTemperature.selectedSegmentIndex = 0
         
-    
         return segmentForTemperature
     }()
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -17,7 +17,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     lazy var weatherImage = UIImageView()
     lazy var tempLabel = UILabel()
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -38,24 +37,21 @@ class MainCollectionViewCell: UICollectionViewCell {
         //weatherImage.clipsToBounds = true
         weatherImage.contentMode = .scaleAspectFit
         
-        
         // Added the UI components
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(weatherImage)
         stackView.addArrangedSubview(tempLabel)
         contentView.addSubview(stackView)
         
-        
         //Set the constraits
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

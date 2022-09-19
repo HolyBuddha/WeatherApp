@@ -4,8 +4,6 @@
 //
 //  Created by Vladimir Izmaylov on 22.08.2022.
 //
-
-
 import UIKit
 
 extension UIScrollView {

@@ -17,7 +17,6 @@ class MainTableViewCell: UITableViewCell {
     lazy var weatherImage = UIImageView()
     lazy var weatherTempMinMax = UILabel()
   
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -36,7 +35,6 @@ class MainTableViewCell: UITableViewCell {
         // weatherImage properties
         weatherImage.tintColor = .white
         weatherImage.contentMode = .scaleAspectFit
-        
         
         // Added the UI components
         stackViewCell.addArrangedSubview(weatherDay)
