@@ -12,8 +12,11 @@ enum TemperatureType {
     case celsius
     case fahrenheit
 }
+// MARK: - Class
 
-class MainViewController: UIViewController, UIScrollViewDelegate {
+class MainViewController: UIViewController {
+    
+    // MARK: - Private properties
     
     private let locationService = LocationService()
     private let geocoder = CLGeocoder()
@@ -127,6 +130,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         return openWeatherLabel
     }()
     
+    // MARK: - Life Cycles Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationService.startLocationManager()
@@ -145,6 +150,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         super.viewWillAppear(animated)
         if firstLaoding == false { updateWeatherInfo(latitude: latitude ?? 0, longitude: longitude ?? 0) }
     }
+    
+    // MARK: - Private methods
     
     private func setupNavigationBar() {
         rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
@@ -276,7 +283,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         let buttonBarButton = UIBarButtonItem(customView: button)
         self.navigationItem.leftBarButtonItem = buttonBarButton
     }
-
+    
     private func hideViewsWhenLoading(getWeatherData: Bool) {
         if getWeatherData {
             tableView.isHidden = false
@@ -291,24 +298,26 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
                 self.openWeatherLabel.isHidden = true
             }
         }
-}
-    func statusBarColorChange(scrollUp: Bool) {
-        if scrollUp {
-            let appearance = UINavigationBarAppearance()
-            appearance.backgroundColor = UIColor(white: 1, alpha: 0.8)
-            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
-            self.navigationController?.navigationBar.tintColor = .black
-        } else {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithTransparentBackground()
-            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-           self.navigationController?.navigationBar.tintColor = .white
-        }
-        }
     }
+    //    func statusBarColorChange(scrollUp: Bool) {
+    //        if scrollUp {
+    //            let appearance = UINavigationBarAppearance()
+    //            appearance.backgroundColor = UIColor(white: 1, alpha: 0.8)
+    //            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    //            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+    //            self.navigationController?.navigationBar.tintColor = .black
+    //        } else {
+    //            let appearance = UINavigationBarAppearance()
+    //            appearance.configureWithTransparentBackground()
+    //            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    //           self.navigationController?.navigationBar.tintColor = .white
+    //        }
+    //        }
+}
 
-extension MainViewController {
+// MARK: - UIScrollViewDelegate
+
+extension MainViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView.contentOffset.y > 20 {
@@ -331,6 +340,8 @@ extension MainViewController {
     }
 }
 
+// MARK: - LocationManagerProtocol
+
 extension MainViewController: LocationManagerProtocol {
     func newLocationReceived(location: CLLocation) {
         latitude = location.coordinate.latitude
@@ -339,6 +350,6 @@ extension MainViewController: LocationManagerProtocol {
         geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { placemarks, _ in
             let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
             self.locationName = locality
+        }
     }
-}
 }

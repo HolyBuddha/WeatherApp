@@ -7,21 +7,27 @@
 
 import UIKit
 
+// MARK: - Class
+
 class MainHeaderCollectionReusableView: UICollectionReusableView {
     
-    static let reuseId = "HeaderCollectionReusableView"
+    // MARK: - Internal properties
     
-    // Create UIViews
-    private lazy var windImage = UIImageView()
-    private lazy var pressureImage = UIImageView()
-    private lazy var humidityImage = UIImageView()
+    static let reuseId = "HeaderCollectionReusableView"
     
     lazy var windSpeedLabel = UILabel()
     lazy var pressureLabel = UILabel()
     lazy var humidityLabel = UILabel()
     
+    // MARK: - Private properties
+    
+    private lazy var windImage = UIImageView()
+    private lazy var pressureImage = UIImageView()
+    private lazy var humidityImage = UIImageView()
     private lazy var labelsStackView = UIStackView()
     private lazy var imagesStackView = UIStackView()
+    
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)

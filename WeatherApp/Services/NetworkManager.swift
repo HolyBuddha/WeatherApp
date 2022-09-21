@@ -7,11 +7,19 @@
 
 import Foundation
 
+// MARK: - Class
+
 final class NetworkManager {
+    
+    // MARK: - Internal properties
     
     static let shared = NetworkManager()
     
+    // MARK: - Initializers
+    
     private init() {}
+    
+    // MARK: - Internal methods
     
     func fetchData<T: Decodable>(from url: String?, with completion: @escaping (Result<T, Error>) -> Void) {
             guard let url = URL(string: url ?? "") else {
@@ -28,6 +36,5 @@ final class NetworkManager {
                 }
                 
             }.resume()
-
     }
 }

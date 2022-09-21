@@ -7,26 +7,43 @@
 
 import UIKit
 
-class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
+// MARK: - Class
+
+class MainTableView: UITableView {
+    
+    // MARK: - Private properties
     
     private var weatherData: WeatherForecastData?
+    
+    // MARK: - Initializers
     
     init() {
         
         super.init(frame: .zero, style: .plain)
         
         //Configure TableView
-        
         register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.reuseID)
         register(MainTableViewHeader.self, forHeaderFooterViewReuseIdentifier: MainTableViewHeader.reuseID)
-        dataSource = self
-        delegate = self
-        isScrollEnabled = false
+        self.dataSource = self
+        self.delegate = self
+        self.isScrollEnabled = false
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Internal methods
     
     func setData(weatherData: WeatherForecastData) {
         self.weatherData = weatherData
     }
+    
+}
+
+// MARK: - UITableViewDataSource
+
+extension MainTableView: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         1
@@ -61,17 +78,18 @@ class MainTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
         cell.weatherTempMinMax.text = checkTemp(weatherData?.daily[indexPath.row].temp.min ?? 0) +
         "..." + checkTemp(weatherData?.daily[indexPath.row].temp.max ?? 0)
         cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
-        
         return cell
     }
+
+}
+
+// MARK: - UITableViewDelegate
+
+extension MainTableView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: MainTableViewHeader.reuseID)
         return header
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }

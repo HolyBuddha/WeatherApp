@@ -7,15 +7,22 @@
 
 import UIKit
 
+// MARK: - Class
+
 class MainCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Internal properties
     
     static let reuseId = "MainCollectionViewCell"
     
-    // Create UIViews
+    // MARK: - Private properties
+    
     lazy var stackView = UIStackView()
     lazy var timeLabel = UILabel()
     lazy var weatherImage = UIImageView()
     lazy var tempLabel = UILabel()
+    
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,7 +41,6 @@ class MainCollectionViewCell: UICollectionViewCell {
         
         // weatherImage Properties
         weatherImage.tintColor = .white
-        //weatherImage.clipsToBounds = true
         weatherImage.contentMode = .scaleAspectFit
         
         // Added the UI components

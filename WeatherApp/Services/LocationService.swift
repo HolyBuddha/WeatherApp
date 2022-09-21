@@ -5,19 +5,28 @@
 //  Created by Vladimir Izmaylov on 29.07.2022.
 //
 
-import Foundation
 import CoreLocation
+
+// MARK: - LocationManagerProtocol
 
 protocol LocationManagerProtocol: AnyObject {
     func newLocationReceived(location: CLLocation)
 }
 
+// MARK: - Class
+
 class LocationService: NSObject {
+    
+    // MARK: - Internal properties
+    
+    weak var delegate: LocationManagerProtocol?
+    
+    // MARK: - Private properties
     
     private let locationManager = CLLocationManager()
     private var currentCoordinate: CLLocation?
     
-    weak var delegate: LocationManagerProtocol?
+    // MARK: - Internal methods
     
     @objc func startLocationManager() {
         
@@ -31,6 +40,7 @@ class LocationService: NSObject {
         }
     }
 }
+// MARK: - CLLocationManagerDelegate
 
 extension LocationService: CLLocationManagerDelegate {
     

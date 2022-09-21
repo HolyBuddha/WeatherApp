@@ -7,7 +7,11 @@
 
 import UIKit
 
+// MARK: - Class
+
 class MainTableViewCell: UITableViewCell {
+    
+    // MARK: - Internal properties
     
     static let reuseID = "MainTableViewCell"
     
@@ -17,6 +21,8 @@ class MainTableViewCell: UITableViewCell {
     lazy var weatherImage = UIImageView()
     lazy var weatherTempMinMax = UILabel()
   
+    // MARK: - Initializers
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

@@ -98,9 +98,9 @@
 		12358EED28CA8C6C00D054BE /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
-				12283C4C28ACFE1700876646 /* MainHeaderCollectionReusableView.swift */,
-				121C34B828ABBEF600C4D710 /* MainCollectionViewCell.swift */,
 				121C34B628ABB05F00C4D710 /* MainCollectionView.swift */,
+				121C34B828ABBEF600C4D710 /* MainCollectionViewCell.swift */,
+				12283C4C28ACFE1700876646 /* MainHeaderCollectionReusableView.swift */,
 			);
 			path = CollectionView;
 			sourceTree = "<group>";

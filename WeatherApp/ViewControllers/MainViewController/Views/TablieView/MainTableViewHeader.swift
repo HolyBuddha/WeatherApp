@@ -7,12 +7,18 @@
 
 import UIKit
 
+// MARK: - Class
+
 class MainTableViewHeader: UITableViewHeaderFooterView {
+    
+    // MARK: - Internal properties
 
     static let reuseID = "TableViewHeader"
     
     // Create UIViews
     private lazy var headerOfTableView = UILabel()
+    
+    // MARK: - Initializers
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
