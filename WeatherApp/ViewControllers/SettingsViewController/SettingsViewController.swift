@@ -107,11 +107,11 @@ class SettingsViewController: UIViewController {
         }
     }
     
-    private func setupSubviews(_ subviews: UIView...) {
-        subviews.forEach { subview in
-            view.addSubview(subview)
-        }
-    }
+//    private func setupSubviews(_ subviews: UIView...) {
+//        subviews.forEach { subview in
+//            view.addSubview(subview)
+//        }
+//    }
     private func setConstraits() {
         stackViewForTemp.translatesAutoresizingMaskIntoConstraints = false
         stackViewForWindSpeed.translatesAutoresizingMaskIntoConstraints = false

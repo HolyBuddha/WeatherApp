@@ -18,14 +18,4 @@ extension MainTableView {
         return result
         
     }
-    
-    func checkTemp(_ temp: Double) -> String {
-        if temp > 0 {
-            return "+" + "\(Int(temp))" + "\u{00B0}"
-        } else if temp == 0 {
-            return "0" + "\u{00B0}"
-        } else {
-            return "\(Int(temp))" + "\u{00B0}"
-        }
-    }
 }

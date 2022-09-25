@@ -12,6 +12,7 @@ enum TemperatureType {
     case celsius
     case fahrenheit
 }
+
 // MARK: - Class
 
 class MainViewController: UIViewController {
@@ -19,7 +20,7 @@ class MainViewController: UIViewController {
     // MARK: - Private properties
     
     private let locationService = LocationService()
-    private let geocoder = CLGeocoder()
+   
     private var locationName = ""
     private var latitude: Double?
     private var longitude: Double?
@@ -161,12 +162,6 @@ class MainViewController: UIViewController {
         
     }
     
-    private func setupSubviews(_ subviews: UIView...) {
-        subviews.forEach { subview in
-            view.addSubview(subview)
-        }
-    }
-    
     private func setConstraits() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -212,7 +207,9 @@ class MainViewController: UIViewController {
     
     @objc private func moveToLocationsVC() {
         let locationsVC = LocationsViewController()
+        locationsVC.weatherData = weatherForecastData
         self.navigationController?.pushViewController(locationsVC, animated: true)
+        //self.transitionVc(vc: locationsVC, duration: 0.5, type: .fromLeft)
     }
     
     private func updateLabels() {
@@ -346,6 +343,7 @@ extension MainViewController: LocationManagerProtocol {
     func newLocationReceived(location: CLLocation) {
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
+        let geocoder = CLGeocoder()
         updateWeatherInfo(latitude: latitude ?? 0, longitude: longitude ?? 0)
         geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { placemarks, _ in
             let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")

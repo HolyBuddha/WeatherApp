@@ -9,8 +9,8 @@ import UIKit
 
 class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
     
-    private var weatherData: WeatherForecastData?
-
+    private var weatherData: [CurrentWeatherData] = []
+    
     init() {
         
         super.init(frame: .zero, style: .plain)
@@ -23,8 +23,8 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         self.isScrollEnabled = false
     }
     
-    func setData(weatherData: WeatherForecastData) {
-        self.weatherData = weatherData
+    func setData(weatherData: CurrentWeatherData) {
+        self.weatherData.append(weatherData)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -32,7 +32,7 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        weatherData?.daily.count ?? 1
+        weatherData.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -42,10 +42,7 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // Configure the Table
-        tableView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
-        tableView.layer.cornerRadius = 20
-        tableView.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
-        tableView.layer.borderWidth = 1
+        tableView.backgroundColor = .black
         tableView.separatorColor = UIColor(white: 1, alpha: 0.5)
         
         // Configure the Cell
@@ -55,11 +52,16 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
             fatalError("DequeueReusableCell failed while casting")
         }
         
+        cell.backgroundColor = UIColor.clear
+        cell.locationName.text = "Россия"
+        cell.weatherTempMinMax.text = Double(weatherData[indexPath.row].temp ).temperatureValue
+        cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[
+            (weatherData[indexPath.row].weather[0].icon)
+        ] ?? "pencil")?.withRenderingMode(.alwaysOriginal)
         return cell
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

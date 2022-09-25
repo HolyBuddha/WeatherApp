@@ -30,6 +30,7 @@
 		12E63C0128CCC59A007E5F4F /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E63C0028CCC59A007E5F4F /* LocationsViewController.swift */; };
 		12E63C0728CCC90B007E5F4F /* LocationsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E63C0628CCC90B007E5F4F /* LocationsTableViewCell.swift */; };
 		12E63C0928CCCD48007E5F4F /* LocationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E63C0828CCCD48007E5F4F /* LocationsTableView.swift */; };
+		12EB14BD28E09A8E00C7D87E /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EB14BC28E09A8E00C7D87E /* UIViewController.swift */; };
 		12EB866F289939D7002F31FD /* MainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EB866E289939D7002F31FD /* MainTableViewCell.swift */; };
 		12F6B7D82885928700CCA40E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F6B7D72885928700CCA40E /* NetworkManager.swift */; };
 		12FC0CDA28627AD700FDCCEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FC0CD928627AD700FDCCEA /* AppDelegate.swift */; };
@@ -63,6 +64,7 @@
 		12E63C0028CCC59A007E5F4F /* LocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 		12E63C0628CCC90B007E5F4F /* LocationsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTableViewCell.swift; sourceTree = "<group>"; };
 		12E63C0828CCCD48007E5F4F /* LocationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsTableView.swift; sourceTree = "<group>"; };
+		12EB14BC28E09A8E00C7D87E /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		12EB866E289939D7002F31FD /* MainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewCell.swift; sourceTree = "<group>"; };
 		12F6B7D72885928700CCA40E /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		12FC0CD628627AD700FDCCEA /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				12DF325428A5B40B00E2EE6C /* UIView.swift */,
+				12EB14BC28E09A8E00C7D87E /* UIViewController.swift */,
 				12C8DABE28B3A5AF00D515DD /* UITableVIew.swift */,
 				12C8DABC28B3A57B00D515DD /* UILabel.swift */,
 				12C8DAC028B3A5E700D515DD /* UICollectionView.swift */,
@@ -333,7 +336,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "#if which swiftlint > /dev/null; then\n  #swiftlint\n#else\n  #echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -342,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12EB14BD28E09A8E00C7D87E /* UIViewController.swift in Sources */,
 				12358EEB28CA15D500D054BE /* WeatherImages.swift in Sources */,
 				12FC0CDE28627AD700FDCCEA /* MainViewController.swift in Sources */,
 				12C8DABF28B3A5AF00D515DD /* UITableVIew.swift in Sources */,

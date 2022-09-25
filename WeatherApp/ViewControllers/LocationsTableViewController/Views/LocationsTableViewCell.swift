@@ -13,7 +13,7 @@ class LocationsTableViewCell: UITableViewCell {
         
         // Create UIViews
         lazy var stackViewCell = UIStackView()
-        lazy var weatherDay = UILabel()
+        lazy var locationName = UILabel()
         lazy var weatherImage = UIImageView()
         lazy var weatherTempMinMax = UILabel()
       
@@ -29,7 +29,7 @@ class LocationsTableViewCell: UITableViewCell {
             stackViewCell.sizeToFit()
             
             // weatherLabels Properties
-            weatherDay.drawLabel(fontSize: 16, weight: .medium)
+            locationName.drawLabel(fontSize: 16, weight: .medium)
             weatherTempMinMax.drawLabel(fontSize: 16, weight: .medium)
             
             // weatherImage properties
@@ -37,7 +37,7 @@ class LocationsTableViewCell: UITableViewCell {
             weatherImage.contentMode = .scaleAspectFit
             
             // Added the UI components
-            stackViewCell.addArrangedSubview(weatherDay)
+            stackViewCell.addArrangedSubview(locationName)
             stackViewCell.addArrangedSubview(weatherImage)
             stackViewCell.addArrangedSubview(weatherTempMinMax)
             addSubview(stackViewCell)

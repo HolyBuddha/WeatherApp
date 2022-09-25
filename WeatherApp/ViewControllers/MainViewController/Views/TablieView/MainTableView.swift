@@ -75,8 +75,8 @@ extension MainTableView: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.backgroundColor = UIColor.clear
         cell.weatherDay.text = indexPath.row != 0 ? convertDateToString(unixDate: weatherData?.daily[indexPath.row].dt ?? 0, dateFormat: "E, d.MM") : "Сегодня"
-        cell.weatherTempMinMax.text = checkTemp(weatherData?.daily[indexPath.row].temp.min ?? 0) +
-        "..." + checkTemp(weatherData?.daily[indexPath.row].temp.max ?? 0)
+        cell.weatherTempMinMax.text = Double(weatherData?.daily[indexPath.row].temp.min ?? 0).temperatureValue +
+        "..." + Double(weatherData?.daily[indexPath.row].temp.max ?? 0).temperatureValue
         cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[(weatherData?.daily[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
         return cell
     }
