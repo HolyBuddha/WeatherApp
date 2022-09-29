@@ -24,17 +24,18 @@ class LocationsTableViewCell: UITableViewCell {
             stackViewCell.axis  = NSLayoutConstraint.Axis.horizontal
             stackViewCell.alignment = .center
             stackViewCell.distribution  = UIStackView.Distribution.equalCentering
-            stackViewCell.spacing = 5
             stackViewCell.translatesAutoresizingMaskIntoConstraints = false
+            
             stackViewCell.sizeToFit()
             
             // weatherLabels Properties
-            locationName.drawLabel(fontSize: 16, weight: .medium)
-            weatherTempMinMax.drawLabel(fontSize: 16, weight: .medium)
+            locationName.drawLabel(fontSize: 20, weight: .medium)
+            weatherTempMinMax.drawLabel(fontSize: 20, weight: .medium)
             
             // weatherImage properties
             weatherImage.tintColor = .white
             weatherImage.contentMode = .scaleAspectFit
+            
             
             // Added the UI components
             stackViewCell.addArrangedSubview(locationName)
@@ -48,10 +49,9 @@ class LocationsTableViewCell: UITableViewCell {
                 stackViewCell.topAnchor.constraint(equalTo: topAnchor),
                 stackViewCell.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
                 stackViewCell.bottomAnchor.constraint(equalTo: bottomAnchor),
-                weatherImage.centerXAnchor.constraint(equalTo: centerXAnchor)
+                weatherImage.rightAnchor.constraint(equalTo: weatherTempMinMax.leftAnchor, constant: -20),
             ])
         }
-        
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }

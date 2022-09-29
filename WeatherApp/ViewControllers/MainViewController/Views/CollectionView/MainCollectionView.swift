@@ -47,11 +47,11 @@ class MainCollectionView: UICollectionView {
     // MARK: - Private methods
     
     private func configCollectionView() {
-        backgroundColor = UIColor(white: 0.5, alpha: 0.5)
-        layer.cornerRadius = 20
-        layer.borderColor = CGColor(gray: 1, alpha: 0.5)
-        layer.borderWidth = 1
-        contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
+        self.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        self.layer.cornerRadius = 20
+        self.layer.borderColor = CGColor(gray: 1, alpha: 0.5)
+        self.layer.borderWidth = 1
+        self.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
     }
 }
 

@@ -10,6 +10,7 @@ import UIKit
 class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
     
     private var weatherData: [CurrentWeatherData] = []
+    private var locationName = ""
     
     init() {
         
@@ -23,8 +24,9 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         self.isScrollEnabled = false
     }
     
-    func setData(weatherData: CurrentWeatherData) {
+    func setData(weatherData: CurrentWeatherData, locationName: String) {
         self.weatherData.append(weatherData)
+        self.locationName = locationName
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -36,7 +38,7 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        50
+        80
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -52,13 +54,24 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
             fatalError("DequeueReusableCell failed while casting")
         }
         
+        assignBackgroundImage(view: cell, indexPath: indexPath)
         cell.backgroundColor = UIColor.clear
-        cell.locationName.text = "Россия"
-        cell.weatherTempMinMax.text = Double(weatherData[indexPath.row].temp ).temperatureValue
+        cell.locationName.text = locationName
+        cell.weatherTempMinMax.text = Double(weatherData[indexPath.row].temp).temperatureValue
         cell.weatherImage.image = UIImage(systemName: WeatherImages.iconIDs[
             (weatherData[indexPath.row].weather[0].icon)
         ] ?? "pencil")?.withRenderingMode(.alwaysOriginal)
         return cell
+    }
+    
+    private func assignBackgroundImage(view: UIView, indexPath: IndexPath) {
+        let backgroundImage = UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        backgroundImage.alpha = 0.5
+        backgroundImage.clipsToBounds = true
+        backgroundImage.contentMode = .scaleAspectFill
+        backgroundImage.updateBackgroundImage(id: weatherData[indexPath.row].weather[0].id)
+        view.addSubview(backgroundImage)
+        view.sendSubviewToBack(backgroundImage)
     }
     
     required init?(coder aDecoder: NSCoder) {

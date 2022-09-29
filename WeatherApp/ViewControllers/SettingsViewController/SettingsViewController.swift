@@ -38,7 +38,7 @@ class SettingsViewController: UIViewController {
     }()
     
     private lazy var labelForWindSpeed: UILabel = {
-       let labelForWindSpeed = UILabel()
+        let labelForWindSpeed = UILabel()
         labelForWindSpeed.text = "Скорость ветра"
         labelForWindSpeed.drawLabel(fontSize: 20, weight: .medium)
         labelForWindSpeed.textAlignment = .left
@@ -47,7 +47,7 @@ class SettingsViewController: UIViewController {
     }()
     
     private lazy var labelForSwitchTemperature: UILabel = {
-       let labelForSwitchTemperature = UILabel()
+        let labelForSwitchTemperature = UILabel()
         labelForSwitchTemperature.text = "Температура"
         labelForSwitchTemperature.drawLabel(fontSize: 20, weight: .medium)
         labelForSwitchTemperature.textAlignment = .left
@@ -61,32 +61,25 @@ class SettingsViewController: UIViewController {
         let titleTextAttributesSelected = [NSAttributedString.Key.foregroundColor: UIColor.black]
         segmentForWindSpeed.setTitleTextAttributes(titleTextAttributes, for: .normal)
         segmentForWindSpeed.setTitleTextAttributes(titleTextAttributesSelected, for: .selected)
-        
         segmentForWindSpeed.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         segmentForWindSpeed.layer.borderWidth = 1
         segmentForWindSpeed.layer.borderColor = CGColor(gray: 1, alpha: 1)
-        
         segmentForWindSpeed.addTarget(self, action: #selector(valueChanged(segmentedControl:)), for: .valueChanged)
         segmentForWindSpeed.selectedSegmentIndex = 0
-        
         return segmentForWindSpeed
     }()
     
     lazy var segmentForTemperature: UISegmentedControl = {
-        
         let segmentForTemperature = UISegmentedControl(items: ["C", "F"])
         let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         let titleTextAttributesSelected = [NSAttributedString.Key.foregroundColor: UIColor.black]
         segmentForTemperature.setTitleTextAttributes(titleTextAttributes, for: .normal)
         segmentForTemperature.setTitleTextAttributes(titleTextAttributesSelected, for: .selected)
-        
         segmentForTemperature.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         segmentForTemperature.layer.borderWidth = 1
         segmentForTemperature.layer.borderColor = CGColor(gray: 1, alpha: 1)
-        
         segmentForTemperature.addTarget(self, action: #selector(valueChanged(segmentedControl:)), for: .valueChanged)
         segmentForTemperature.selectedSegmentIndex = 0
-        
         return segmentForTemperature
     }()
     
@@ -107,15 +100,10 @@ class SettingsViewController: UIViewController {
         }
     }
     
-//    private func setupSubviews(_ subviews: UIView...) {
-//        subviews.forEach { subview in
-//            view.addSubview(subview)
-//        }
-//    }
     private func setConstraits() {
         stackViewForTemp.translatesAutoresizingMaskIntoConstraints = false
         stackViewForWindSpeed.translatesAutoresizingMaskIntoConstraints = false
-    
+        
         NSLayoutConstraint.activate([
             stackViewForTemp.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             stackViewForTemp.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
@@ -126,12 +114,14 @@ class SettingsViewController: UIViewController {
             stackViewForWindSpeed.topAnchor.constraint(equalTo: stackViewForTemp.bottomAnchor, constant: 20)
         ])
     }
-    private func setupNavigationBar() {
     
+    private func setupNavigationBar() {
+        
         title = "Настройки"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.view.backgroundColor = .clear
     }
+    
     @objc private func valueChanged(segmentedControl: UISegmentedControl) {
         switch segmentedControl.selectedSegmentIndex {
         case 0: WeatherApi.shared.units = .metric
@@ -139,4 +129,4 @@ class SettingsViewController: UIViewController {
         default: break
         }
     }
-    }
+}

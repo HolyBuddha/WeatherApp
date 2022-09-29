@@ -19,7 +19,6 @@ extension Double {
     }
     
     func convertDateToString(dateFormat: String) -> String {
-        
         let dateFromDT = NSDate(timeIntervalSince1970: self)
         let dayTimePeriodFormatter = DateFormatter()
         dayTimePeriodFormatter.dateFormat = dateFormat

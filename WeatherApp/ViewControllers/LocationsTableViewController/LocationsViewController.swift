@@ -14,6 +14,7 @@ class LocationsViewController: UIViewController {
     // MARK: - Internal properties
     
     var weatherData: WeatherForecastData?
+    var locationName = ""
     
     // MARK: - Private  properties
     
@@ -33,9 +34,10 @@ class LocationsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.setData(weatherData: weatherData!.current)
+        tableView.setData(weatherData: weatherData!.current, locationName: locationName)
         setupSubviews(searchBar, tableView)
         setConstraits()
+        setupNavigationBar()
         view.backgroundColor = .black
     }
     
@@ -49,11 +51,17 @@ class LocationsViewController: UIViewController {
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
             searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
-            
             tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    private func setupNavigationBar() {
+        title = "Избранное"
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.view.backgroundColor = .clear
+    }
 }
+

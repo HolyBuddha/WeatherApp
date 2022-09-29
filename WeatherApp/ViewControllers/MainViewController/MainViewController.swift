@@ -157,6 +157,9 @@ class MainViewController: UIViewController {
     private func setupNavigationBar() {
         rightBarButtonItem(iconNameButton: "gearshape", selector: #selector(moveToSettingsVC))
         leftBarButtonItem(iconNameButton: "line.horizontal.3", selector: #selector(moveToLocationsVC))
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.tintColor = .white
         
@@ -208,6 +211,7 @@ class MainViewController: UIViewController {
     @objc private func moveToLocationsVC() {
         let locationsVC = LocationsViewController()
         locationsVC.weatherData = weatherForecastData
+        locationsVC.locationName = self.locationName
         self.navigationController?.pushViewController(locationsVC, animated: true)
         //self.transitionVc(vc: locationsVC, duration: 0.5, type: .fromLeft)
     }
@@ -218,7 +222,7 @@ class MainViewController: UIViewController {
         tempLabel.text = Double(weatherForecastData?.current.temp ?? 0).temperatureValue
         weatherDescriptionLabel.text = WeatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
         weatherFeelsLike.text = "Ощущается как: " + (weatherForecastData?.current.feelsLike ?? 0).temperatureValue
-        backgroundImage.image = updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
+        backgroundImage.updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
     }
     
     private func assignbackground() {
@@ -248,17 +252,6 @@ class MainViewController: UIViewController {
         refreshControl.endRefreshing()
         print("latitude: " + latitude.description)
         print("longitude: " + longitude.description)
-    }
-    
-    private func updateBackgroundImage(id: Int) -> UIImage {
-        switch id {
-        case 800: return UIImage(#imageLiteral(resourceName: "cleanSky"))
-        case 801...802: return UIImage(#imageLiteral(resourceName: "littleCloudy"))
-        case 803...804: return UIImage(#imageLiteral(resourceName: "darkCloudy"))
-        case ...232: return UIImage(#imageLiteral(resourceName: "storm"))
-        default:
-            return UIImage(#imageLiteral(resourceName: "rainy"))
-        }
     }
     
     private func rightBarButtonItem(iconNameButton: String, selector: Selector) {
