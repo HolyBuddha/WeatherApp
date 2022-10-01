@@ -24,8 +24,11 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         self.isScrollEnabled = false
     }
     
-    func setData(weatherData: CurrentWeatherData, locationName: String) {
+    func setData(weatherData: CurrentWeatherData) {
         self.weatherData.append(weatherData)
+    }
+    
+    func setLocationName(locationName: String) {
         self.locationName = locationName
     }
     

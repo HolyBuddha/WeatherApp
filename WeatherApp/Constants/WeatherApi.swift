@@ -23,6 +23,9 @@ class WeatherApi {
     func apiForecastDaily(latitude: Double, longitude: Double) -> String {
         "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&appid=\(appId)&units=\(units)&lang=ru&exclude=alerts,minutely"
         }
+    func apiGeocodingByCity(city: String) -> String {
+    "https://api.openweathermap.org/geo/1.0/direct?q=\(city)&appid=\(appId)"
+    }
     
     enum Units: String {
         case metric

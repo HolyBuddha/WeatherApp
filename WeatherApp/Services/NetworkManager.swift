@@ -22,19 +22,20 @@ final class NetworkManager {
     // MARK: - Internal methods
     
     func fetchData<T: Decodable>(from url: String?, with completion: @escaping (Result<T, Error>) -> Void) {
-            guard let url = URL(string: url ?? "") else {
-                completion(.failure("Bad url"))
-                return }
-    
-            URLSession.shared.dataTask(with: url) { data, _, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                DispatchQueue.main.async {
-                    completion( Result { try JSONDecoder().decode(T.self, from: data!) })
-                }
-                
-            }.resume()
+        guard let url = URL(string: url ?? "") else {
+            completion(.failure("Bad url"))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            DispatchQueue.main.async {
+                completion( Result { try JSONDecoder().decode(T.self, from: data!) })
+            }
+            
+        }.resume()
     }
 }

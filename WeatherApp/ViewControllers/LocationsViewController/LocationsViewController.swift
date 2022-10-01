@@ -14,13 +14,17 @@ class LocationsViewController: UIViewController {
     // MARK: - Internal properties
     
     var weatherData: WeatherForecastData?
+    var geoData: Geocoding?
+    //var geoCodingData: WeatherGeocodingData?
     var locationName = ""
     
     // MARK: - Private  properties
     
     private lazy var tableView = LocationsTableView()
+    private lazy var tableViewWithCities = UITableView()
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.delegate = self
         searchBar.placeholder = "City"
         searchBar.searchTextField.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         searchBar.barTintColor = .black
@@ -34,7 +38,8 @@ class LocationsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.setData(weatherData: weatherData!.current, locationName: locationName)
+        tableView.setData(weatherData: weatherData!.current)
+        tableView.setLocationName(locationName: locationName)
         setupSubviews(searchBar, tableView)
         setConstraits()
         setupNavigationBar()
@@ -64,4 +69,43 @@ class LocationsViewController: UIViewController {
         navigationController?.view.backgroundColor = .clear
     }
 }
+
+extension LocationsViewController: UISearchBarDelegate {
+
+func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    
+    //let urlGeocodingByCity = WeatherApi.shared.apiForecastDaily(latitude: 55, longitude: 37)
+    let urlGeocodingByCity = WeatherApi.shared.apiGeocodingByCity(city: searchBar.text!)
+    print(urlGeocodingByCity)
+        
+    NetworkManager.shared.fetchData(from: urlGeocodingByCity) { (result: Result<Geocoding, Error>) in
+        switch result {
+        case .success(let geoData):
+            self.geoData = geoData
+            print("\(geoData[0].name) " + "lat: \(geoData[0].latitude)  " + "lon: \(geoData[0].longitude)")
+            let mainVC = MainViewController()
+            mainVC.loadingLocation = false
+            mainVC.latitude = geoData[0].latitude
+            mainVC.longitude = geoData[0].longitude
+            self.navigationController?.pushViewController(mainVC, animated: true)
+        case .failure(let error):
+            print(error.localizedDescription)
+        }
+        
+//        let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: self.geoData?[0].latitude ?? 0, longitude: self.geoData?[0].longitude ?? 0)
+//
+//        NetworkManager.shared.fetchData(from: urlForecastDaily) { (result: Result<WeatherForecastData, Error>) in
+//            switch result {
+//            case .success(let weatherData):
+//                //self.tableView.setData(weatherData: weatherData.current)
+//                //self.tableView.reloadData()
+//                let mainVC = MainViewController()
+//                mainVC.weatherForecastData = weatherData
+//                self.navigationController?.pushViewController(mainVC, animated: true)
+//            case .failure(let error):
+//                print(error.localizedDescription)
+            }
+        }
+}
+
 

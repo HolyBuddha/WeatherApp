@@ -20,11 +20,12 @@ class MainViewController: UIViewController {
     // MARK: - Private properties
     
     private let locationService = LocationService()
-   
+    
     private var locationName = ""
-    private var latitude: Double?
-    private var longitude: Double?
-    private var firstLaoding: Bool = true
+    var latitude: Double = 0
+    var longitude: Double = 0
+    private var firstLoading: Bool = true
+    var loadingLocation: Bool = true
     
     private let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
     private var temperatureType = TemperatureType.celsius
@@ -45,7 +46,8 @@ class MainViewController: UIViewController {
         let scrollView = UIScrollView()
         
         scrollView.refreshControl = refreshControl
-        scrollView.refreshControl?.addTarget(self.locationService, action: #selector(locationService.startLocationManager), for: .valueChanged)
+        //        scrollView.refreshControl?.addTarget(self.locationService, action: #selector(locationService.startLocationManager), for: .valueChanged)
+        scrollView.refreshControl?.addTarget(self, action: #selector(updateWeatherInfo), for: .valueChanged)
         scrollView.delegate = self
         scrollView.showsVerticalScrollIndicator = false
         scrollView.contentSize = CGSize(
@@ -135,7 +137,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        locationService.startLocationManager()
+        if loadingLocation { locationService.startLocationManager() }
         hideViewsWhenLoading(getWeatherData: false)
         locationService.delegate = self
         setupNavigationBar()
@@ -149,7 +151,7 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if firstLaoding == false { updateWeatherInfo(latitude: latitude ?? 0, longitude: longitude ?? 0) }
+        if !firstLoading || !loadingLocation { updateWeatherInfo() }
     }
     
     // MARK: - Private methods
@@ -230,7 +232,8 @@ class MainViewController: UIViewController {
         self.view.insertSubview(backgroundImage, at: 0)
     }
     
-    private func updateWeatherInfo(latitude: Double, longitude: Double) {
+    //@objc private func updateWeatherInfo(latitude: Double, longitude: Double) {
+    @objc private func updateWeatherInfo() {
         let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: latitude, longitude: longitude)
         
         NetworkManager.shared.fetchData(from: urlForecastDaily) { (result: Result<WeatherForecastData, Error>) in
@@ -243,11 +246,10 @@ class MainViewController: UIViewController {
                 self.tableView.reloadData()
                 self.collectionView.reloadData()
                 self.hideViewsWhenLoading(getWeatherData: true)
-                self.firstLaoding.toggle()
+                self.firstLoading = false
                 print(self.weatherForecastData?.current.weather[0].id ?? "no id")
             case .failure(let error): print(error.localizedDescription)
             }
-            
         }
         refreshControl.endRefreshing()
         print("latitude: " + latitude.description)
@@ -289,20 +291,6 @@ class MainViewController: UIViewController {
             }
         }
     }
-    //    func statusBarColorChange(scrollUp: Bool) {
-    //        if scrollUp {
-    //            let appearance = UINavigationBarAppearance()
-    //            appearance.backgroundColor = UIColor(white: 1, alpha: 0.8)
-    //            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    //            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
-    //            self.navigationController?.navigationBar.tintColor = .black
-    //        } else {
-    //            let appearance = UINavigationBarAppearance()
-    //            appearance.configureWithTransparentBackground()
-    //            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-    //           self.navigationController?.navigationBar.tintColor = .white
-    //        }
-    //        }
 }
 
 // MARK: - UIScrollViewDelegate
@@ -336,11 +324,30 @@ extension MainViewController: LocationManagerProtocol {
     func newLocationReceived(location: CLLocation) {
         latitude = location.coordinate.latitude
         longitude = location.coordinate.longitude
+        updateWeatherInfo()
         let geocoder = CLGeocoder()
-        updateWeatherInfo(latitude: latitude ?? 0, longitude: longitude ?? 0)
-        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { placemarks, _ in
-            let locality = placemarks?[0].locality ?? (placemarks?[0].name ?? "Ошибка")
-            self.locationName = locality
+        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { [weak self] (placemarks, error) in
+            if let error = error {
+                print("Unable to Reverse Geocode Location (\(error))")
+            } else {
+                if let placemarks = placemarks {
+                    let locality = placemarks[0].locality
+                    self?.locationName = locality ?? "No Data"
+                }
+            }
         }
     }
 }
+//let geocoder = CLGeocoder()
+//    geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+//        // Process Response
+//        if let error = error {
+//            print("Unable to Reverse Geocode Location (\(error))")
+//        } else {
+//            if let placemarks = placemarks, let placemark = placemarks.first {
+//                self.city = placemark.locality!
+//
+//                //self.country = placemark.country!
+//            }
+//        }
+//    }
