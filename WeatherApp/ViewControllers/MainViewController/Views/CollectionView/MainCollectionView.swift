@@ -69,7 +69,7 @@ extension MainCollectionView: UICollectionViewDataSource {
         ) as? MainCollectionViewCell else {
             fatalError("DequeueReusableCell failed while casting")
         }
-        cell.timeLabel.text = convertDateToString(unixDate: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
+        cell.timeLabel.text = DateFormatter.getDateString(from: weatherData?.hourly[indexPath.row].dt ?? 0, dateFormat: "HH:mm")
         cell.weatherImage.image = UIImage(
             systemName: WeatherImages.iconIDs[(weatherData?.hourly[indexPath.row].weather[0].icon) ?? "50d"] ?? "cloud.bolt.fill")?.withRenderingMode(.alwaysOriginal)
         cell.tempLabel.text = Double(weatherData?.hourly[indexPath.row].temp ?? 0).temperatureValue

@@ -9,17 +9,17 @@ import Foundation
 
 struct WeatherGeocoding: Decodable {
     let name: String
-    let localNames: [String: String]
+    //let localNames: [String: String]
     let latitude: Double
     let longitude: Double
-    let country, state: String
+    //let country, state: String
 
     enum CodingKeys: String, CodingKey {
         case name
-        case localNames = "local_names"
+        //case localNames = "local_names"
         case latitude = "lat"
         case longitude = "lon"
-        case country, state
+        //case country, state
     }
 }
 

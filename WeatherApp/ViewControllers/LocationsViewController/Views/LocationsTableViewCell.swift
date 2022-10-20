@@ -7,8 +7,12 @@
 
 import UIKit
 
+// MARK: - Class
+
 class LocationsTableViewCell: UITableViewCell {
         
+    // MARK: - Internal properties
+    
         static let reuseID = "LocationsTableViewCell"
         
         // Create UIViews
@@ -17,6 +21,8 @@ class LocationsTableViewCell: UITableViewCell {
         lazy var weatherImage = UIImageView()
         lazy var weatherTempMinMax = UILabel()
       
+    // MARK: - Initializers
+    
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             
@@ -25,7 +31,6 @@ class LocationsTableViewCell: UITableViewCell {
             stackViewCell.alignment = .center
             stackViewCell.distribution  = UIStackView.Distribution.equalCentering
             stackViewCell.translatesAutoresizingMaskIntoConstraints = false
-            
             stackViewCell.sizeToFit()
             
             // weatherLabels Properties

@@ -20,10 +20,8 @@ class MainViewController: UIViewController {
     // MARK: - Private properties
     
     private let locationService = LocationService()
-    
-    private var locationName = ""
-    var latitude: Double = 0
-    var longitude: Double = 0
+    //let languageDevice = Locale.preferredLanguages[0]
+    var locationName = "" //вынеси в отдельный класс
     private var firstLoading: Bool = true
     var loadingLocation: Bool = true
     
@@ -151,7 +149,7 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !firstLoading || !loadingLocation { updateWeatherInfo() }
+        if !firstLoading || !loadingLocation { updateWeatherInfo() } //getLoactionName()
     }
     
     // MARK: - Private methods
@@ -218,12 +216,13 @@ class MainViewController: UIViewController {
         //self.transitionVc(vc: locationsVC, duration: 0.5, type: .fromLeft)
     }
     
-    private func updateLabels() {
+    func updateLabels() {
         locationLabel.text = locationName
         //locationLabel.text = weatherCurrentData?.name ?? "ERROR"
         tempLabel.text = Double(weatherForecastData?.current.temp ?? 0).temperatureValue
-        weatherDescriptionLabel.text = WeatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
-        weatherFeelsLike.text = "Ощущается как: " + (weatherForecastData?.current.feelsLike ?? 0).temperatureValue
+        weatherDescriptionLabel.text = weatherForecastData?.current.weather[0].description.capitalizedSentence
+        //weatherDescriptionLabel.text = WeatherConditions.weatherIDs[weatherForecastData?.current.weather[0].id ?? 200]
+        weatherFeelsLike.text = "Feels like: " + (weatherForecastData?.current.feelsLike ?? 0).temperatureValue
         backgroundImage.updateBackgroundImage(id: weatherForecastData?.current.weather[0].id ?? 200)
     }
     
@@ -234,26 +233,27 @@ class MainViewController: UIViewController {
     
     //@objc private func updateWeatherInfo(latitude: Double, longitude: Double) {
     @objc private func updateWeatherInfo() {
-        let urlForecastDaily = WeatherApi.shared.apiForecastDaily(latitude: latitude, longitude: longitude)
+        let urlForecastDaily = WeatherApi.shared.apiForecastDaily()
         
-        NetworkManager.shared.fetchData(from: urlForecastDaily) { (result: Result<WeatherForecastData, Error>) in
+        NetworkManager.shared.fetchData(from: urlForecastDaily) { [weak self] (result: Result<WeatherForecastData, Error>) in
             switch result {
             case .success(let weatherData):
-                self.weatherForecastData = weatherData
-                self.tableView.setData(weatherData: weatherData)
-                self.collectionView.setData(weatherData: weatherData)
-                self.updateLabels()
-                self.tableView.reloadData()
-                self.collectionView.reloadData()
-                self.hideViewsWhenLoading(getWeatherData: true)
-                self.firstLoading = false
-                print(self.weatherForecastData?.current.weather[0].id ?? "no id")
+                self?.weatherForecastData = weatherData
+                self?.tableView.setData(weatherData: weatherData)
+                self?.collectionView.setData(weatherData: weatherData)
+                self?.updateLabels()
+                self?.tableView.reloadData()
+                self?.collectionView.reloadData()
+                self?.hideViewsWhenLoading(getWeatherData: true)
+                self?.firstLoading = false
+                print(urlForecastDaily)
+                print(self?.weatherForecastData?.current.weather[0].id ?? "no id")
             case .failure(let error): print(error.localizedDescription)
             }
         }
         refreshControl.endRefreshing()
-        print("latitude: " + latitude.description)
-        print("longitude: " + longitude.description)
+        print("latitude: " + WeatherApi.shared.latitude.description)
+        print("longitude: " + WeatherApi.shared.longitude.description)
     }
     
     private func rightBarButtonItem(iconNameButton: String, selector: Selector) {
@@ -291,6 +291,22 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
+    private func getLoactionName() {
+        let currentLocation = CLLocation(latitude: WeatherApi.shared.latitude, longitude: WeatherApi.shared.longitude)
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(currentLocation, preferredLocale: Locale.current) {
+            (placemarks, error) in
+            if let error = error {
+                print("Unable to Reverse Geocode Location (\(error))")
+            } else {
+                if let placemarks = placemarks {
+                    let locality = placemarks[0].locality
+                    self.locationName = locality ?? "No Data"
+                }
+            }
+        }
+    }
 }
 
 // MARK: - UIScrollViewDelegate
@@ -308,7 +324,6 @@ extension MainViewController: UIScrollViewDelegate {
             }
         } else {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear) {
-                //self.statusBarColorChange(scrollUp: false)
                 self.stackView.spacing = 5
                 self.updateLabels()
                 self.tempLabel.font = UIFont.systemFont(ofSize: 80, weight: .medium)
@@ -322,32 +337,12 @@ extension MainViewController: UIScrollViewDelegate {
 
 extension MainViewController: LocationManagerProtocol {
     func newLocationReceived(location: CLLocation) {
-        latitude = location.coordinate.latitude
-        longitude = location.coordinate.longitude
+        WeatherApi.shared.latitude = location.coordinate.latitude
+        WeatherApi.shared.longitude = location.coordinate.longitude
+//        latitude = location.coordinate.latitude
+//        longitude = location.coordinate.longitude
         updateWeatherInfo()
-        let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(location, preferredLocale: Locale.current) { [weak self] (placemarks, error) in
-            if let error = error {
-                print("Unable to Reverse Geocode Location (\(error))")
-            } else {
-                if let placemarks = placemarks {
-                    let locality = placemarks[0].locality
-                    self?.locationName = locality ?? "No Data"
-                }
-            }
+        getLoactionName()
         }
     }
-}
-//let geocoder = CLGeocoder()
-//    geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
-//        // Process Response
-//        if let error = error {
-//            print("Unable to Reverse Geocode Location (\(error))")
-//        } else {
-//            if let placemarks = placemarks, let placemark = placemarks.first {
-//                self.city = placemark.locality!
-//
-//                //self.country = placemark.country!
-//            }
-//        }
-//    }
+

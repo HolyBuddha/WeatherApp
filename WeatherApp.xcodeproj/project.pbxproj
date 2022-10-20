@@ -17,6 +17,8 @@
 		1262991128E72E2000BEDFFC /* WeatherGeocodingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1262991028E72E2000BEDFFC /* WeatherGeocodingData.swift */; };
 		12741DC328D3C33800281920 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12741DC228D3C33800281920 /* Double.swift */; };
 		1276C499289487A000986039 /* WeatherApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1276C498289487A000986039 /* WeatherApi.swift */; };
+		127B910F28EAFAE900A3D3E7 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127B910E28EAFAE900A3D3E7 /* StorageManager.swift */; };
+		127B911128EB033500A3D3E7 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127B911028EB033500A3D3E7 /* DateFormatter.swift */; };
 		12981CC1288582B70032F16F /* WeatherForecastData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12981CC0288582B70032F16F /* WeatherForecastData.swift */; };
 		12B5ECF728D3BDEB00C084B9 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B5ECF628D3BDEB00C084B9 /* String.swift */; };
 		12C8DABD28B3A57B00D515DD /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C8DABC28B3A57B00D515DD /* UILabel.swift */; };
@@ -52,6 +54,8 @@
 		1262991028E72E2000BEDFFC /* WeatherGeocodingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherGeocodingData.swift; sourceTree = "<group>"; };
 		12741DC228D3C33800281920 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		1276C498289487A000986039 /* WeatherApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApi.swift; sourceTree = "<group>"; };
+		127B910E28EAFAE900A3D3E7 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		127B911028EB033500A3D3E7 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		12981CC0288582B70032F16F /* WeatherForecastData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastData.swift; sourceTree = "<group>"; };
 		12B5ECF628D3BDEB00C084B9 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		12C8DABC28B3A57B00D515DD /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
@@ -109,6 +113,13 @@
 			path = CollectionView;
 			sourceTree = "<group>";
 		};
+		127B910D28EAF9C800A3D3E7 /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DataBase;
+			sourceTree = "<group>";
+		};
 		12981CBF288582550032F16F /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +173,7 @@
 				12C8DAC528B4038E00D515DD /* UIScrollView.swift */,
 				12B5ECF628D3BDEB00C084B9 /* String.swift */,
 				12741DC228D3C33800281920 /* Double.swift */,
+				127B911028EB033500A3D3E7 /* DateFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -223,6 +235,7 @@
 			children = (
 				12F6B7D72885928700CCA40E /* NetworkManager.swift */,
 				124414412893FC57002429EF /* LocationService.swift */,
+				127B910E28EAFAE900A3D3E7 /* StorageManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -252,6 +265,7 @@
 				12F6B7D62885926F00CCA40E /* Services */,
 				12C8DACA28B4CEE200D515DD /* Source */,
 				12E63C0A28CF2F7F007E5F4F /* Constants */,
+				127B910D28EAF9C800A3D3E7 /* DataBase */,
 				12DF325328A5B3D700E2EE6C /* Extensions */,
 			);
 			path = WeatherApp;
@@ -348,6 +362,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				127B911128EB033500A3D3E7 /* DateFormatter.swift in Sources */,
 				12EB14BD28E09A8E00C7D87E /* UIViewController.swift in Sources */,
 				12358EEB28CA15D500D054BE /* WeatherImages.swift in Sources */,
 				12FC0CDE28627AD700FDCCEA /* MainViewController.swift in Sources */,
@@ -378,6 +393,7 @@
 				12DF325528A5B40B00E2EE6C /* UIView.swift in Sources */,
 				12283C4D28ACFE1700876646 /* MainHeaderCollectionReusableView.swift in Sources */,
 				12981CC1288582B70032F16F /* WeatherForecastData.swift in Sources */,
+				127B910F28EAFAE900A3D3E7 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,25 +7,37 @@
 
 import UIKit
 
+// MARK: - Class
+
 class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: - Private properties
     
     private var weatherData: [CurrentWeatherData] = []
     private var locationName = ""
+    
+    // MARK: - Initializers
     
     init() {
         
         super.init(frame: .zero, style: .plain)
         
         //Configure TableView
-        
         register(LocationsTableViewCell.self, forCellReuseIdentifier: LocationsTableViewCell.reuseID)
         self.dataSource = self
         self.delegate = self
         self.isScrollEnabled = false
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Internal methods
+    
     func setData(weatherData: CurrentWeatherData) {
         self.weatherData.append(weatherData)
+        print(self.weatherData.count)
     }
     
     func setLocationName(locationName: String) {
@@ -56,7 +68,6 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
             for: indexPath) as? LocationsTableViewCell else {
             fatalError("DequeueReusableCell failed while casting")
         }
-        
         assignBackgroundImage(view: cell, indexPath: indexPath)
         cell.backgroundColor = UIColor.clear
         cell.locationName.text = locationName
@@ -66,6 +77,7 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         ] ?? "pencil")?.withRenderingMode(.alwaysOriginal)
         return cell
     }
+    // MARK: - Private methods
     
     private func assignBackgroundImage(view: UIView, indexPath: IndexPath) {
         let backgroundImage = UIImageView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
@@ -75,9 +87,5 @@ class LocationsTableView: UITableView, UITableViewDataSource, UITableViewDelegat
         backgroundImage.updateBackgroundImage(id: weatherData[indexPath.row].weather[0].id)
         view.addSubview(backgroundImage)
         view.sendSubviewToBack(backgroundImage)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

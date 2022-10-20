@@ -25,7 +25,7 @@ class MainTableViewHeader: UITableViewHeaderFooterView {
         
         // Labels Properties
         headerOfTableView.drawLabel(fontSize: 16, weight: .regular, textAligment: .left)
-        headerOfTableView.text = "Прогноз на 7 дней"
+        headerOfTableView.text = "Forecast for 7 days"
         headerOfTableView.translatesAutoresizingMaskIntoConstraints = false
         
         // Added the UI components

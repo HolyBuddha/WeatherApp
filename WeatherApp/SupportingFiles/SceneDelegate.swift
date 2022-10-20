@@ -18,4 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MainViewController())
         window?.rootViewController?.navigationController?.navigationBar.barStyle = .black
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        StorageManager.shared.saveContext()
+    }
 }
